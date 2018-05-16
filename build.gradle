@@ -1,0 +1,5 @@
+defaultTasks 'clean', 'build', 'shadowJar'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.0'
+}
