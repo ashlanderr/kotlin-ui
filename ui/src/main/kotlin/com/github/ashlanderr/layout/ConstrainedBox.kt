@@ -5,22 +5,7 @@ import java.awt.Graphics
 import kotlin.math.max
 import kotlin.math.min
 
-class ConstrainedBox : Node {
-    override var renderLeft: Double = 0.0
-        private set
-
-    override var renderTop: Double = 0.0
-        private set
-
-    override var renderWidth: Double = 0.0
-        private set
-
-    override var renderHeight: Double = 0.0
-        private set
-
-    override var parent: Node? = null
-        private set
-
+class ConstrainedBox : AbstractNode() {
     @ReactiveProperty
     var maxWidth: Double = Double.POSITIVE_INFINITY
 

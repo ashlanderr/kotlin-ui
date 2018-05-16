@@ -3,22 +3,7 @@ package com.github.ashlanderr.layout
 import com.github.ashlanderr.core.*
 import java.awt.Graphics
 
-class Center : Node {
-    override var renderLeft: Double = 0.0
-        private set
-
-    override var renderTop: Double = 0.0
-        private set
-
-    override var renderWidth: Double = 0.0
-        private set
-
-    override var renderHeight: Double = 0.0
-        private set
-
-    override var parent: Node? = null
-        private set
-
+class Center : AbstractNode() {
     @ReactiveProperty
     var child: Node = EmptyNode
 

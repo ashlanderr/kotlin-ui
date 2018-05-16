@@ -1,29 +1,11 @@
 package com.github.ashlanderr.text
 
-import com.github.ashlanderr.core.Builder
-import com.github.ashlanderr.core.Node
-import com.github.ashlanderr.core.ReactiveProperty
-import com.github.ashlanderr.core.build
+import com.github.ashlanderr.core.*
 import java.awt.Color
 import java.awt.Graphics
 
-class TextBlock : Node {
+class TextBlock : AbstractNode() {
     private var lines: List<String> = emptyList()
-
-    override var renderLeft: Double = 0.0
-        private set
-
-    override var renderTop: Double = 0.0
-        private set
-
-    override var renderWidth: Double = 0.0
-        private set
-
-    override var renderHeight: Double = 0.0
-        private set
-
-    override var parent: Node? = null
-        private set
 
     @ReactiveProperty
     var text: String = ""
