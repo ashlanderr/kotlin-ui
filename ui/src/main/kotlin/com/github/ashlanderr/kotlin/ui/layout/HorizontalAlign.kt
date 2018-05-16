@@ -1,6 +1,6 @@
-package com.github.ashlanderr.layout
+package com.github.ashlanderr.kotlin.ui.layout
 
-import com.github.ashlanderr.core.Node
+import com.github.ashlanderr.kotlin.ui.core.Node
 
 sealed class HorizontalAlign {
     abstract val minWidth: Double

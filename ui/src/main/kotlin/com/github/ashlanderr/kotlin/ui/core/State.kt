@@ -1,4 +1,4 @@
-package com.github.ashlanderr.core
+package com.github.ashlanderr.kotlin.ui.core
 
 abstract class State<S : State<S, C>, C : Component<S, C>> {
     lateinit var component: C

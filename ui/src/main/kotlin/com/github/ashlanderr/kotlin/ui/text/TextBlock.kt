@@ -1,6 +1,6 @@
-package com.github.ashlanderr.text
+package com.github.ashlanderr.kotlin.ui.text
 
-import com.github.ashlanderr.core.*
+import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Color
 import java.awt.Graphics
 

@@ -1,4 +1,4 @@
-package com.github.ashlanderr.graphics
+package com.github.ashlanderr.kotlin.ui.graphics
 
 interface AnimationMode {
     fun isCompleted(times: Int): Boolean

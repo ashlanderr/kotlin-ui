@@ -1,4 +1,4 @@
-package com.github.ashlanderr.text
+package com.github.ashlanderr.kotlin.ui.text
 
 import java.awt.FontMetrics
 

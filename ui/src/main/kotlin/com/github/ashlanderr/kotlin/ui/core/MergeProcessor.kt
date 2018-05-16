@@ -1,4 +1,4 @@
-package com.github.ashlanderr.core
+package com.github.ashlanderr.kotlin.ui.core
 
 import kotlin.math.min
 import kotlin.reflect.KClass

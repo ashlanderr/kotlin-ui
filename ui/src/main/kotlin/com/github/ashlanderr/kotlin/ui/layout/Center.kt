@@ -1,6 +1,6 @@
-package com.github.ashlanderr.layout
+package com.github.ashlanderr.kotlin.ui.layout
 
-import com.github.ashlanderr.core.*
+import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics
 
 class Center : AbstractNode() {

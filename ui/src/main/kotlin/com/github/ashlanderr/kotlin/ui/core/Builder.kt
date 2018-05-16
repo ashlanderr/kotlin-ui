@@ -1,4 +1,4 @@
-package com.github.ashlanderr.core
+package com.github.ashlanderr.kotlin.ui.core
 
 typealias Builder<T> = T.() -> Unit
 

@@ -1,6 +1,6 @@
-package com.github.ashlanderr.graphics
+package com.github.ashlanderr.kotlin.ui.graphics
 
-import com.github.ashlanderr.core.*
+import com.github.ashlanderr.kotlin.ui.core.*
 
 typealias AnimationHandler = (time: Double) -> Node
 
