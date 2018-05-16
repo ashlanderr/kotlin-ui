@@ -17,9 +17,9 @@ class Rect : AbstractNode() {
     @ReactiveProperty
     var stroke: Color? = Color.BLACK
 
-    override fun measure(g: Graphics, maxWidth: Double, maxHeight: Double) {
-        renderWidth = width ?: maxWidth
-        renderHeight = height ?: maxHeight
+    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+        renderWidth = width ?: w.compute(0.0, w.size)
+        renderHeight = height ?: h.compute(0.0, h.size)
     }
 
     override fun arrange(left: Double, top: Double) {

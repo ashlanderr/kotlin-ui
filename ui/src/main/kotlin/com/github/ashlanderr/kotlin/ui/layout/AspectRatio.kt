@@ -10,11 +10,13 @@ class AspectRatio : AbstractNode() {
     @ReactiveProperty
     var child: Node = EmptyNode
 
-    override fun measure(g: Graphics, maxWidth: Double, maxHeight: Double) {
+    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+        val maxWidth = w.compute(0.0, w.size)
+        val maxHeight = h.compute(0.0, h.size)
         val ratioWidth = maxHeight * ratio
         val ratioHeight = maxWidth / ratio
 
-        if (ratioWidth > maxWidth) {
+        if (ratioHeight < h.size) {
             renderWidth = maxWidth
             renderHeight = ratioHeight
         } else {
@@ -22,9 +24,7 @@ class AspectRatio : AbstractNode() {
             renderHeight = maxHeight
         }
 
-        child.measure(g, renderWidth, renderHeight)
-        renderWidth = child.renderWidth
-        renderHeight = child.renderHeight
+        child.measure(g, Constraint.Max(renderWidth), Constraint.Max(renderHeight))
     }
 
     override fun arrange(left: Double, top: Double) {
@@ -34,7 +34,11 @@ class AspectRatio : AbstractNode() {
     }
 
     override fun render(g: Graphics) {
+        val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
+
         child.render(g)
+
+        g.popClip(clip)
     }
 
     override fun mount(parent: Node?) {

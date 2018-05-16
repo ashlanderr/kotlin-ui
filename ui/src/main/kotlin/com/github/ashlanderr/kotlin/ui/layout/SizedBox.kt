@@ -10,7 +10,7 @@ class SizedBox : AbstractNode() {
     @ReactiveProperty
     var height: Double = 0.0
 
-    override fun measure(g: Graphics, maxWidth: Double, maxHeight: Double) {
+    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
         renderWidth = width
         renderHeight = height
     }

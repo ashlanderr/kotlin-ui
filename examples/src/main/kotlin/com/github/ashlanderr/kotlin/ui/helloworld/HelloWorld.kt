@@ -1,4 +1,4 @@
-package org.github.ashlanderr.kotlin.ui.helloworld
+package com.github.ashlanderr.kotlin.ui.helloworld
 
 import com.github.ashlanderr.kotlin.ui.core.Application
 import com.github.ashlanderr.kotlin.ui.layout.center

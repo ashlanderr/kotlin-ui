@@ -22,7 +22,7 @@ abstract class Application : Node, JFrame() {
     private var animationRequested = false
     private val animationTimer = Timer(1000 / 60) { animationFrame() }
 
-    final override fun measure(g: Graphics, maxWidth: Double, maxHeight: Double) { }
+    final override fun measure(g: Graphics, w: Constraint, h: Constraint) { }
     final override fun arrange(left: Double, top: Double) { }
     final override fun render(g: Graphics) { }
     final override fun mount(parent: Node?) { }
@@ -40,7 +40,7 @@ abstract class Application : Node, JFrame() {
         buffer.setClip(0, 0, width, height)
 
         root = MergeProcessor.merge(root, render(), this)
-        root.measure(buffer, bufferWidth.toDouble(), bufferHeight.toDouble())
+        root.measure(buffer, Constraint.Max(bufferWidth.toDouble()), Constraint.Max(bufferHeight.toDouble()))
         root.arrange(0.0, 0.0)
         root.render(buffer)
 

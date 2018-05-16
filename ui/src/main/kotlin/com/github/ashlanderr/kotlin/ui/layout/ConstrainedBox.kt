@@ -21,10 +21,10 @@ class ConstrainedBox : AbstractNode() {
     @ReactiveProperty
     var child: Node = EmptyNode
 
-    override fun measure(g: Graphics, maxWidth: Double, maxHeight: Double) {
-        val width = max(this.minWidth, min(this.maxWidth, maxWidth))
-        val height = max(this.minHeight, min(this.maxHeight, maxHeight))
-        child.measure(g, width, height)
+    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+        renderWidth = max(minWidth, min(maxWidth, w.size))
+        renderHeight = max(minHeight, min(maxHeight, h.size))
+        child.measure(g, Constraint.Max(renderWidth), Constraint.Max(renderHeight))
         renderWidth = child.renderWidth
         renderHeight = child.renderHeight
     }

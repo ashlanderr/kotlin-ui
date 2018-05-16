@@ -16,8 +16,8 @@ abstract class Component<S : State<S, C>, C: Component<S, C>> : Node {
 
     private var child: Node = EmptyNode
 
-    override fun measure(g: Graphics, maxWidth: Double, maxHeight: Double) {
-        child.measure(g, maxWidth, maxHeight)
+    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+        child.measure(g, w, h)
     }
 
     override fun arrange(left: Double, top: Double) {

@@ -1,11 +1,15 @@
 package com.github.ashlanderr.kotlin.ui.text
 
 import com.github.ashlanderr.kotlin.ui.core.*
+import com.github.ashlanderr.kotlin.ui.layout.HorizontalAlign
 import java.awt.Color
 import java.awt.Graphics
+import kotlin.math.min
 
 class TextBlock : AbstractNode() {
-    private var lines: List<String> = emptyList()
+    private data class Line(var left: Double, var width: Double, val text: String)
+
+    private var lines: List<Line> = emptyList()
 
     @ReactiveProperty
     var text: String = ""
@@ -13,12 +17,21 @@ class TextBlock : AbstractNode() {
     @ReactiveProperty
     var wrapping: TextWrapping = TextWrapping.BREAK_WORD
 
-    override fun measure(g: Graphics, maxWidth: Double, maxHeight: Double) {
-        val fm = g.fontMetrics
-        val breaks = wrapping.split(text, fm, maxWidth.toInt())
-        lines = breaks.windowed(2, 1).map { (a, b) -> text.substring(a, b) }
+    @ReactiveProperty
+    var align: HorizontalAlign = HorizontalAlign.LEFT
 
-        renderWidth = maxWidth
+    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+        val fm = g.fontMetrics
+        val breaks = wrapping.split(text, fm, w.size.toInt())
+
+        lines = breaks.windowed(2, 1).map { (a, b) ->
+            val lineText = text.substring(a, b)
+            val lineWidth = fm.stringWidth(lineText).toDouble()
+            Line(0.0, lineWidth, lineText)
+        }
+
+        val linesWidth = lines.map { it.width }.max() ?: 0.0
+        renderWidth = min(w.size, linesWidth)
         renderHeight = lines.size * g.fontMetrics.height.toDouble() + fm.descent
     }
 
@@ -34,7 +47,7 @@ class TextBlock : AbstractNode() {
         g.color = Color.BLACK
 
         for (line in lines) {
-            g.drawString(line, renderLeft.toInt(), top.toInt())
+            g.drawString(line.text, (renderLeft + line.left).toInt(), top.toInt())
             top += fm.height
         }
     }

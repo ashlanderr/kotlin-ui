@@ -9,7 +9,7 @@ interface Node {
     val renderHeight: Double
     val parent: Node?
 
-    fun measure(g: Graphics, maxWidth: Double, maxHeight: Double)
+    fun measure(g: Graphics, w: Constraint, h: Constraint)
     fun arrange(left: Double, top: Double)
     fun render(g: Graphics)
 

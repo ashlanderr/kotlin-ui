@@ -7,17 +7,18 @@ class Center : AbstractNode() {
     @ReactiveProperty
     var child: Node = EmptyNode
 
-    override fun measure(g: Graphics, maxWidth: Double, maxHeight: Double) {
-        child.measure(g, maxWidth, maxHeight)
-        renderWidth = maxWidth
-        renderHeight = maxHeight
+    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+        child.measure(g, Constraint.Min(w.size), Constraint.Min(h.size))
+        renderWidth = w.compute(child.renderWidth, w.size)
+        renderHeight = h.compute(child.renderHeight, h.size)
     }
 
     override fun arrange(left: Double, top: Double) {
-        val childLeft = left + (renderWidth - child.renderWidth) / 2
-        val childTop = top + (renderHeight - child.renderHeight) / 2
         renderLeft = left
         renderTop = top
+
+        val childLeft = left + (renderWidth - child.renderWidth) / 2
+        val childTop = top + (renderHeight - child.renderHeight) / 2
         child.arrange(childLeft, childTop)
     }
 

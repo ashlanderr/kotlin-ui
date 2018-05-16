@@ -4,53 +4,49 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics
 import kotlin.math.max
 
-class Column : AbstractNode(), Parent {
+class Stack : AbstractNode(), Parent {
     @ReactiveList
-    override val children: MutableList<Node> = ArrayList()
-
-    @ReactiveProperty
-    var align: HorizontalAlign = HorizontalAlign.LEFT
+    override var children: MutableList<Node> = ArrayList()
 
     override fun measure(g: Graphics, w: Constraint, h: Constraint) {
-        renderWidth = 0.0
-        val ch = Constraint.Min(Double.POSITIVE_INFINITY)
         var cw: Constraint = Constraint.Min(w.size)
+        var ch: Constraint = Constraint.Min(h.size)
+
+        var width = 0.0
+        var height = 0.0
 
         for (child in children) {
             child.measure(g, cw, ch)
-            renderWidth = max(renderWidth, child.renderWidth)
+            width = max(width, child.renderWidth)
+            height = max(height, child.renderHeight)
         }
 
-        cw = align.computeWidth(renderWidth, w)
-        renderWidth = cw.size
+        cw = Constraint.Max(w.compute(width, w.size))
+        ch = Constraint.Max(h.compute(height, h.size))
+
+        renderWidth = 0.0
         renderHeight = 0.0
 
         for (child in children) {
             child.measure(g, cw, ch)
-            renderHeight += child.renderHeight
+            renderWidth = max(renderWidth, child.renderWidth)
+            renderHeight = max(renderHeight, child.renderHeight)
         }
     }
 
     override fun arrange(left: Double, top: Double) {
         renderLeft = left
         renderTop = top
-        var childTop = top
 
         for (child in children) {
-            val childLeft = align.computeLeft(child.renderWidth, renderWidth) + renderLeft
-            child.arrange(childLeft, childTop)
-            childTop += child.renderHeight
+            child.arrange(left, top)
         }
     }
 
     override fun render(g: Graphics) {
-        val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
-
         for (child in children) {
             child.render(g)
         }
-
-        g.popClip(clip)
     }
 
     override fun mount(parent: Node?) {
@@ -62,4 +58,4 @@ class Column : AbstractNode(), Parent {
     }
 }
 
-fun column(builder: Builder<Column>) = build(builder)
+fun stack(builder: Builder<Stack>) = build(builder)
