@@ -15,6 +15,7 @@ abstract class Application : Node, JFrame() {
     final override val renderWidth: Double = 0.0
     final override val renderHeight: Double = 0.0
     final override val parent: Node? = null
+    final override val key: Any? = null
 
     private var bufferWidth = 0
     private var bufferHeight = 0

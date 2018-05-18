@@ -1,6 +1,5 @@
 package com.github.ashlanderr.kotlin.ui.core
 
-import kotlin.math.min
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
@@ -41,26 +40,35 @@ object MergeProcessor {
         getLists(currentClazz).forEach { list ->
             val currentList = list.get(current)
             val nextList = list.get(next)
+            val newList = ArrayList<Node>(currentList.size)
+            val mergedSet = HashSet<Node>(currentList.size)
 
-            val minSize = min(currentList.size, nextList.size)
+            val currentKeys = currentList
+                    .filter { it.key != null }
+                    .associateBy { it.key }
 
-            for (i in 0 until minSize) {
-                val currentValue = currentList[i]
-                val nextValue = nextList[i]
-                currentList[i] = merge(currentValue, nextValue, current)
+            for (nextIndex in nextList.indices) {
+                val nextValue = nextList[nextIndex]
+
+                val currentValue = if (nextValue.key != null)
+                    currentKeys[nextValue.key]
+                else
+                    currentList.getOrNull(nextIndex)
+
+                val mergedValue = merge(currentValue ?: EmptyNode, nextValue, current)
+                newList.add(mergedValue)
+
+                if (currentValue != null) mergedSet.add(currentValue)
             }
 
-            for (i in currentList.size until nextList.size) {
-                val nextValue = nextList[i]
-                mount(nextValue::class, nextValue, current)
-                currentList.add(nextValue)
+            for (currentValue in currentList) {
+                if (currentValue !in mergedSet) {
+                    unmount(currentValue::class, currentValue)
+                }
             }
 
-            for (i in (currentList.size - 1) downTo nextList.size) {
-                val currentValue = currentList[i]
-                unmount(currentValue::class, currentValue)
-                currentList.removeAt(i)
-            }
+            currentList.clear()
+            currentList.addAll(newList)
         }
     }
 

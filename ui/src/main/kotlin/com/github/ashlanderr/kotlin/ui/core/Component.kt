@@ -7,6 +7,7 @@ abstract class Component<S : State<S, C>, C: Component<S, C>> : Node {
     override val renderTop get() = child.renderTop
     override val renderWidth get() = child.renderWidth
     override val renderHeight get() = child.renderHeight
+    final override var key: Any? = null
 
     final override var parent: Node? = null
         private set

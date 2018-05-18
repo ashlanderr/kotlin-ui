@@ -8,6 +8,7 @@ interface Node {
     val renderWidth: Double
     val renderHeight: Double
     val parent: Node?
+    val key: Any?
 
     fun measure(g: Graphics, w: Constraint, h: Constraint)
     fun arrange(left: Double, top: Double)

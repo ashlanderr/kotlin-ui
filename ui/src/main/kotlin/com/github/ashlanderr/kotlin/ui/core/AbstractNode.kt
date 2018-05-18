@@ -18,6 +18,9 @@ abstract class AbstractNode : Node {
     override var parent: Node? = null
         protected set
 
+    @ReactiveProperty
+    override var key: Any? = null
+
     override fun measure(g: Graphics, w: Constraint, h: Constraint) { }
     override fun arrange(left: Double, top: Double) { }
     override fun render(g: Graphics) { }

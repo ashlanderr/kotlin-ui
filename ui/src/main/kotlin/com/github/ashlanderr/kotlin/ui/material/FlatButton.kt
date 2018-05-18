@@ -31,6 +31,7 @@ class FlatButtonState : State<FlatButtonState, FlatButton>() {
                 x = point.x
                 y = point.y
             }
+            ripple.key = ripple
             ripple.onCompleted = { ripples.remove(ripple) }
             ripples.add(ripple)
         }
