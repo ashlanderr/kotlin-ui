@@ -2,13 +2,15 @@ package com.github.ashlanderr.kotlin.ui.graphics
 
 import com.github.ashlanderr.kotlin.ui.core.*
 
-typealias AnimationHandler = (time: Double) -> Node
+typealias AnimationFrameHandler = (time: Double) -> Node
+typealias AnimationCompletedHandler = () -> Unit
 
 class Animation : Component<AnimationState, Animation>() {
     var function: AnimationFunction = AnimationFunction.LINEAR
     var mode: AnimationMode = AnimationMode.INFINITE
     var duration: Double = 1.0
-    var handler: AnimationHandler? = null
+    var onFrame: AnimationFrameHandler? = null
+    var onCompleted: AnimationCompletedHandler? = null
 
     override fun initState() = AnimationState()
 }
@@ -32,12 +34,16 @@ class AnimationState : State<AnimationState, Animation>() {
                     if (!completed) {
                         time = 0.0
                         startTime = currentTime
+                    } else {
+                        time = 1.0
+                        component.onCompleted?.invoke()
                     }
                 }
             }
         }
 
-        return component.handler?.invoke(time) ?: EmptyNode
+        val x = component.function.transform(time)
+        return component.onFrame?.invoke(x) ?: EmptyNode
     }
 }
 
