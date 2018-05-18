@@ -31,7 +31,7 @@ class TextBlock : AbstractNode() {
 
         val linesWidth = lines.map { it.width }.max() ?: 0.0
         renderWidth = w.compute(linesWidth, w.size)
-        renderHeight = lines.size * g.fontMetrics.height.toDouble() + fm.descent
+        renderHeight = lines.size * g.fontMetrics.height.toDouble()
 
         lines.forEach { it.left = align.computeLeft(it.width, renderWidth) }
     }
@@ -43,7 +43,7 @@ class TextBlock : AbstractNode() {
 
     override fun render(g: Graphics) {
         val fm = g.fontMetrics
-        var top = renderTop + fm.height
+        var top = renderTop + fm.ascent
 
         g.color = Color.BLACK
 
