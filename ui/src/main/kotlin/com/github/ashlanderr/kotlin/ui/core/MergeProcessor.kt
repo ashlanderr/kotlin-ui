@@ -27,12 +27,14 @@ object MergeProcessor {
         getProps(clazz).forEach { prop ->
             val currentValue = prop.get(current)
             val nextValue = prop.get(next)
-
-            if (currentValue is Node && nextValue is Node) {
-                prop.set(current, merge(currentValue, nextValue, current))
-            } else if (currentValue != nextValue) {
+            if (currentValue != nextValue) {
                 prop.set(current, nextValue)
             }
+        }
+        getNodes(clazz).forEach { prop ->
+            val currentValue = prop.get(current)
+            val nextValue = prop.get(next)
+            prop.set(current, merge(currentValue, nextValue, current))
         }
     }
 
@@ -88,8 +90,8 @@ object MergeProcessor {
         println("mount $node")
         node.mount(parent)
 
-        getProps(clazz)
-                .mapNotNull { it.get(node) as? Node }
+        getNodes(clazz)
+                .map { it.get(node) }
                 .forEach { mount(it::class, it, node) }
         getLists(clazz)
                 .flatMap { it.get(node) }
@@ -101,6 +103,13 @@ object MergeProcessor {
         return clazz.memberProperties
                 .filter { it.findAnnotation<ReactiveProperty>() != null }
                 .map { it as KMutableProperty1<Node, Any?> }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun getNodes(clazz: KClass<out Node>): List<KMutableProperty1<Node, Node>> {
+        return clazz.memberProperties
+                .filter { it.findAnnotation<ReactiveNode>() != null }
+                .map { it as KMutableProperty1<Node, Node> }
     }
 
     @Suppress("UNCHECKED_CAST")

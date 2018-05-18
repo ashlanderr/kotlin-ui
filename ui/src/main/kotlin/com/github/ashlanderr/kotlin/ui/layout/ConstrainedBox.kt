@@ -18,7 +18,7 @@ class ConstrainedBox : AbstractNode() {
     @ReactiveProperty
     var minHeight: Double = 0.0
 
-    @ReactiveProperty
+    @ReactiveNode
     var child: Node = EmptyNode
 
     override fun measure(g: Graphics, w: Constraint, h: Constraint) {

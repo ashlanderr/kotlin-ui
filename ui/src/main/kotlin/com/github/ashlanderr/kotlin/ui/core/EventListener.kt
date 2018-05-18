@@ -32,7 +32,7 @@ class EventListenerNode : EventListener, AbstractNode() {
     @ReactiveProperty
     var onMouseClick: (MouseEvent) -> Boolean = { true }
 
-    @ReactiveProperty
+    @ReactiveNode
     var child: Node = EmptyNode
 
     override fun measure(g: Graphics, w: Constraint, h: Constraint) {

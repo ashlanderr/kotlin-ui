@@ -1,9 +1,6 @@
 package com.github.ashlanderr.kotlin.ui.material
 
-import com.github.ashlanderr.kotlin.ui.core.Builder
-import com.github.ashlanderr.kotlin.ui.core.Component
-import com.github.ashlanderr.kotlin.ui.core.State
-import com.github.ashlanderr.kotlin.ui.core.build
+import com.github.ashlanderr.kotlin.ui.core.*
 import com.github.ashlanderr.kotlin.ui.graphics.AnimationCompletedHandler
 import com.github.ashlanderr.kotlin.ui.graphics.AnimationMode
 import com.github.ashlanderr.kotlin.ui.graphics.animation
@@ -11,8 +8,13 @@ import com.github.ashlanderr.kotlin.ui.graphics.canvas
 import java.awt.Color
 
 class RippleEffect : Component<RippleEffectState, RippleEffect>() {
+    @ReactiveProperty
     var onCompleted: AnimationCompletedHandler? = null
+
+    @ReactiveProperty
     var x = 0.0
+
+    @ReactiveProperty
     var y = 0.0
 
     override fun initState() = RippleEffectState()

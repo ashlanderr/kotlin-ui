@@ -4,7 +4,10 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import com.github.ashlanderr.kotlin.ui.layout.stack
 
 class FlatButton : Component<FlatButtonState, FlatButton>() {
+    @ReactiveProperty
     var content: Node = EmptyNode
+
+    @ReactiveProperty
     var onClick: () -> Unit = {}
 
     override fun initState() = FlatButtonState()

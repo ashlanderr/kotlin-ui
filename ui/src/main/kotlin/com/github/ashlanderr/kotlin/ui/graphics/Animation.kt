@@ -6,10 +6,19 @@ typealias AnimationFrameHandler = (time: Double) -> Node
 typealias AnimationCompletedHandler = () -> Unit
 
 class Animation : Component<AnimationState, Animation>() {
+    @ReactiveProperty
     var function: AnimationFunction = AnimationFunction.LINEAR
+
+    @ReactiveProperty
     var mode: AnimationMode = AnimationMode.INFINITE
+
+    @ReactiveProperty
     var duration: Double = 1.0
+
+    @ReactiveProperty
     var onFrame: AnimationFrameHandler? = null
+
+    @ReactiveProperty
     var onCompleted: AnimationCompletedHandler? = null
 
     override fun initState() = AnimationState()

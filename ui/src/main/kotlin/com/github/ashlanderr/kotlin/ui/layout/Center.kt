@@ -4,7 +4,7 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics
 
 class Center : AbstractNode() {
-    @ReactiveProperty
+    @ReactiveNode
     var child: Node = EmptyNode
 
     override fun measure(g: Graphics, w: Constraint, h: Constraint) {

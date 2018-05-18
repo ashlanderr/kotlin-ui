@@ -7,7 +7,7 @@ class AspectRatio : AbstractNode() {
     @ReactiveProperty
     var ratio = 1.0
 
-    @ReactiveProperty
+    @ReactiveNode
     var child: Node = EmptyNode
 
     override fun measure(g: Graphics, w: Constraint, h: Constraint) {

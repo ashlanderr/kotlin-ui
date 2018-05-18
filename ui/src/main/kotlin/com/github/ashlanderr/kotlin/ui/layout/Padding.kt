@@ -17,7 +17,7 @@ class Padding : AbstractNode() {
     @ReactiveProperty
     var padding: Indent = Indent.ZERO
 
-    @ReactiveProperty
+    @ReactiveNode
     var child: Node = EmptyNode
 
     override fun measure(g: Graphics, w: Constraint, h: Constraint) {
