@@ -23,4 +23,5 @@ abstract class AbstractNode : Node {
     override fun render(g: Graphics) { }
     override fun mount(parent: Node?) { }
     override fun unmount() { }
+    override fun childAtPoint(point: Point): Node? = null
 }

@@ -25,8 +25,7 @@ abstract class Component<S : State<S, C>, C: Component<S, C>> : Node {
     }
 
     override fun render(g: Graphics) {
-        val newChild = state.render()
-        child = MergeProcessor.merge(child, newChild, this)
+        renderState()
         child.render(g)
     }
 
@@ -35,6 +34,7 @@ abstract class Component<S : State<S, C>, C: Component<S, C>> : Node {
         this.parent = parent
         state = initState()
         state.component = this as C
+        renderState()
     }
 
     override fun unmount() {
@@ -42,5 +42,14 @@ abstract class Component<S : State<S, C>, C: Component<S, C>> : Node {
         state.dispose()
     }
 
+    override fun childAtPoint(point: Point): Node? {
+        return child.childAtPoint(point)
+    }
+
     protected abstract fun initState(): S
+
+    private fun renderState() {
+        val newChild = state.render()
+        child = MergeProcessor.merge(child, newChild, this)
+    }
 }

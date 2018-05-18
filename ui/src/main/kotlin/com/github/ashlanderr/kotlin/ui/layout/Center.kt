@@ -37,6 +37,8 @@ class Center : AbstractNode() {
     override fun unmount() {
         this.parent = null
     }
+
+    override fun childAtPoint(point: Point) = child.takeIf { child.containsPoint(point) }
 }
 
 fun center(builder: Builder<Center>) = build(builder)

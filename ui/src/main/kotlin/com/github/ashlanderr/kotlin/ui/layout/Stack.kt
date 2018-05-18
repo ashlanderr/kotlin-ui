@@ -56,6 +56,8 @@ class Stack : AbstractNode(), Parent {
     override fun unmount() {
         this.parent = null
     }
+
+    override fun childAtPoint(point: Point) = children.childAtPoint(point)
 }
 
 fun stack(builder: Builder<Stack>) = build(builder)

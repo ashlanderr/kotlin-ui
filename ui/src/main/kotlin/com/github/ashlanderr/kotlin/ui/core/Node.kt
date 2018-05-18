@@ -15,4 +15,17 @@ interface Node {
 
     fun mount(parent: Node?)
     fun unmount()
+
+    fun childAtPoint(point: Point): Node?
+}
+
+fun Node.containsPoint(point: Point): Boolean {
+    return point.x >= renderLeft && point.y >= renderTop && point.x <= renderLeft + renderWidth && point.y <= renderTop + renderHeight
+}
+
+fun List<Node>.childAtPoint(point: Point): Node? {
+    for (child in this) {
+        if (child.containsPoint(point)) return child
+    }
+    return null
 }

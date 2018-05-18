@@ -46,6 +46,8 @@ class ConstrainedBox : AbstractNode() {
     override fun unmount() {
         this.parent = null
     }
+
+    override fun childAtPoint(point: Point) = child.takeIf { child.containsPoint(point) }
 }
 
 fun constrainedBox(builder: Builder<ConstrainedBox>) = build(builder)

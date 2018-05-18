@@ -48,6 +48,8 @@ class AspectRatio : AbstractNode() {
     override fun unmount() {
         this.parent = null
     }
+
+    override fun childAtPoint(point: Point) = child.takeIf { child.containsPoint(point) }
 }
 
 fun aspectRatio(builder: Builder<AspectRatio>) = build(builder)
