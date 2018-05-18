@@ -4,7 +4,6 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import com.github.ashlanderr.kotlin.ui.layout.HorizontalAlign
 import java.awt.Color
 import java.awt.Graphics
-import kotlin.math.min
 
 class TextBlock : AbstractNode() {
     private data class Line(var left: Double, var width: Double, val text: String)
@@ -31,8 +30,10 @@ class TextBlock : AbstractNode() {
         }
 
         val linesWidth = lines.map { it.width }.max() ?: 0.0
-        renderWidth = min(w.size, linesWidth)
+        renderWidth = w.compute(linesWidth, w.size)
         renderHeight = lines.size * g.fontMetrics.height.toDouble() + fm.descent
+
+        lines.forEach { it.left = align.computeLeft(it.width, renderWidth) }
     }
 
     override fun arrange(left: Double, top: Double) {
