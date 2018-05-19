@@ -4,9 +4,10 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import com.github.ashlanderr.kotlin.ui.graphics.AnimationController
 import com.github.ashlanderr.kotlin.ui.graphics.AnimationManager
 import com.github.ashlanderr.kotlin.ui.graphics.AnimationMode
-import com.github.ashlanderr.kotlin.ui.graphics.canvas
+import com.github.ashlanderr.kotlin.ui.graphics.Canvas
 import com.github.ashlanderr.kotlin.ui.layout.stack
 import java.awt.Color
+import java.awt.Graphics
 import kotlin.math.sqrt
 
 class RippleEffect : Component<RippleEffectState, RippleEffect>() {
@@ -17,39 +18,9 @@ class RippleEffect : Component<RippleEffectState, RippleEffect>() {
 }
 
 class RippleEffectState : State<RippleEffectState, RippleEffect>() {
-    private inner class RippleState(val point: Point) {
-        private val growAnimation = animations.add(AnimationController(
-                mode = AnimationMode.SINGLE,
-                duration = 0.5,
-                running = true
-        ))
+    private class RippleKey(val point: Point, var released: Boolean)
 
-        private val fadeAnimation = animations.add(AnimationController(
-                mode = AnimationMode.SINGLE,
-                duration = 0.5,
-                running = false,
-                onCompleted = {
-                    ripples.remove(this)
-                }
-        ))
-
-        fun released() {
-            fadeAnimation.resume()
-        }
-
-        fun render() = canvas { g, w, h ->
-            val radius = growAnimation.value * sqrt(w * w + h * h)
-            val left = point.x - radius
-            val top = point.y - radius
-            val width = radius * 2
-            val height = radius * 2
-            val alpha = (1 - fadeAnimation.value) * 0.2
-            g.color = Color(0, 0, 0, (alpha * 255).toInt())
-            g.fillOval(left.toInt(), top.toInt(), width.toInt(), height.toInt())
-        }
-    }
-
-    private val ripples = mutableListOf<RippleState>()
+    private val ripples = mutableListOf<RippleKey>()
     private val animations = AnimationManager(this)
 
     override fun render(): Node {
@@ -57,23 +28,79 @@ class RippleEffectState : State<RippleEffectState, RippleEffect>() {
         return eventListener {
             onMouseDown = {
                 update {
-                    val ripple = RippleState(it.point)
+                    val ripple = RippleKey(it.point, false)
                     ripples.add(ripple)
                 }
                 true
             }
             onMouseUp = {
                 update {
-                    ripples.forEach { it.released() }
+                    ripples.forEach { it.released = true }
                 }
                 true
             }
             child = stack {
                 +component.child
-                ripples.forEach { +it.render() }
+                ripples.forEach {
+                    +Ripple(
+                        point = it.point,
+                        released = it.released,
+                        onCompleted = { ripples.remove(it) }
+                    )
+                }
             }
         }
     }
 }
 
 fun rippleEffect(builder: Builder<RippleEffect>) = build(builder)
+
+class Ripple(
+    @ReactiveProperty var point: Point,
+    @ReactiveProperty var released: Boolean,
+    @ReactiveProperty var onCompleted: () -> Unit
+) : Component<RippleState, Ripple>() {
+    override fun initState() = RippleState()
+}
+
+class RippleState : State<RippleState, Ripple>() {
+    private val animations = AnimationManager(this)
+
+    private val growAnimation = animations.add(AnimationController(
+        mode = AnimationMode.SINGLE,
+        duration = 0.5,
+        running = true
+    ))
+
+    private val fadeAnimation by lazy {
+        animations.add(AnimationController(
+            mode = AnimationMode.SINGLE,
+            duration = 0.5,
+            running = false,
+            onCompleted = component.onCompleted
+        ))
+    }
+
+    override fun render(): Node {
+        animations.update()
+        if (component.released) fadeAnimation.resume()
+        return RippleCanvas(component.point, growAnimation.value, fadeAnimation.value)
+    }
+}
+
+class RippleCanvas(
+    @ReactiveProperty var point: Point,
+    @ReactiveProperty var radiusTime: Double,
+    @ReactiveProperty var alphaTime: Double
+) : Canvas() {
+    override fun render(g: Graphics, w: Double, h: Double) {
+        val radius = radiusTime * sqrt(w * w + h * h)
+        val left = point.x - radius
+        val top = point.y - radius
+        val width = radius * 2
+        val height = radius * 2
+        val alpha = (1 - alphaTime) * 0.2
+        g.color = Color(0, 0, 0, (alpha * 255).toInt())
+        g.fillOval(left.toInt(), top.toInt(), width.toInt(), height.toInt())
+    }
+}
