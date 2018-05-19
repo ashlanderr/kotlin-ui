@@ -4,7 +4,7 @@ import com.github.ashlanderr.kotlin.ui.core.State
 
 typealias AnimationCompletedHandler = () -> Unit
 
-class AnimationManager(private val state: State<*, *>) {
+class AnimationManager(private val state: State) {
     private val animations = mutableListOf<AnimationController>()
 
     fun add(animation: AnimationController): AnimationController {
@@ -55,7 +55,7 @@ class AnimationController(
         }
     }
 
-    fun update(componentState: State<*, *>): Boolean {
+    fun update(componentState: State): Boolean {
         if (state == AnimationState.RUNNING) {
             componentState.update {
                 val newTimestamp = System.nanoTime()

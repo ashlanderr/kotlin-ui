@@ -2,7 +2,7 @@ package com.github.ashlanderr.kotlin.ui.core
 
 import java.awt.Graphics
 
-abstract class Component<S : State<S, C>, C : Component<S, C>> : Node {
+abstract class Component<S : State, C : Component<S, C>> : Node {
     override val renderLeft get() = child.renderLeft
     override val renderTop get() = child.renderTop
     override val renderWidth get() = child.renderWidth
@@ -33,8 +33,7 @@ abstract class Component<S : State<S, C>, C : Component<S, C>> : Node {
     @Suppress("UNCHECKED_CAST")
     override fun mount(parent: Node?) {
         this.parent = parent
-        state = initState()
-        state.component = this as C
+        state = initState(this as C)
         renderState()
     }
 
@@ -47,7 +46,7 @@ abstract class Component<S : State<S, C>, C : Component<S, C>> : Node {
         return child.childAtPoint(point)
     }
 
-    protected abstract fun initState(): S
+    protected abstract fun initState(component: C): S
 
     private fun renderState() {
         val newChild = state.render()

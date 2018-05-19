@@ -9,10 +9,10 @@ class FlatButton : Component<FlatButtonState, FlatButton>() {
     @ReactiveProperty
     var onClick: () -> Unit = {}
 
-    override fun initState() = FlatButtonState()
+    override fun initState(component: FlatButton) = FlatButtonState(component)
 }
 
-class FlatButtonState : State<FlatButtonState, FlatButton>() {
+class FlatButtonState(override val component: FlatButton) : State() {
 
     override fun render(): Node {
         return eventListener {

@@ -9,10 +9,10 @@ import com.github.ashlanderr.kotlin.ui.text.textBlock
 import javax.swing.JFrame
 
 class Counter : Component<CounterState, Counter>() {
-    override fun initState() = CounterState()
+    override fun initState(component: Counter) = CounterState(component)
 }
 
-class CounterState : State<CounterState, Counter>() {
+class CounterState(override val component: Counter) : State() {
     private var count = 0
 
     override fun render() = column {

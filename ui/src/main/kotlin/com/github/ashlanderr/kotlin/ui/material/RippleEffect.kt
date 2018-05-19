@@ -14,10 +14,10 @@ class RippleEffect : Component<RippleEffectState, RippleEffect>() {
     @ReactiveProperty
     var child: Node = EmptyNode
 
-    override fun initState() = RippleEffectState()
+    override fun initState(component: RippleEffect) = RippleEffectState(component)
 }
 
-class RippleEffectState : State<RippleEffectState, RippleEffect>() {
+class RippleEffectState(override val component: RippleEffect) : State() {
     private class RippleKey(val point: Point, var released: Boolean)
 
     private val ripples = mutableListOf<RippleKey>()
@@ -60,10 +60,10 @@ class Ripple(
     @ReactiveProperty var released: Boolean,
     @ReactiveProperty var onCompleted: () -> Unit
 ) : Component<RippleState, Ripple>() {
-    override fun initState() = RippleState()
+    override fun initState(component: Ripple) = RippleState(component)
 }
 
-class RippleState : State<RippleState, Ripple>() {
+class RippleState(override val component: Ripple) : State() {
     private val animations = AnimationManager(this)
 
     private val growAnimation = animations.add(AnimationController(
@@ -72,14 +72,12 @@ class RippleState : State<RippleState, Ripple>() {
         running = true
     ))
 
-    private val fadeAnimation by lazy {
-        animations.add(AnimationController(
-            mode = AnimationMode.SINGLE,
-            duration = 0.5,
-            running = false,
-            onCompleted = component.onCompleted
-        ))
-    }
+    private val fadeAnimation = animations.add(AnimationController(
+        mode = AnimationMode.SINGLE,
+        duration = 0.5,
+        running = false,
+        onCompleted = component.onCompleted
+    ))
 
     override fun render(): Node {
         animations.update()

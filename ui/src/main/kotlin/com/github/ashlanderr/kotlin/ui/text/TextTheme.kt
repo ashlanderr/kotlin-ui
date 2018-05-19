@@ -7,7 +7,7 @@ class TextTheme : Component<TextThemeState, TextTheme>() {
     companion object {
         val DEFAULT = TextTheme()
 
-        fun of(state: State<*, *>): TextTheme = state.ancestorNode() ?: DEFAULT
+        fun of(state: State): TextTheme = state.ancestorNode() ?: DEFAULT
         fun of(node: Node): TextTheme = node.ancestor() ?: DEFAULT
     }
 
@@ -17,10 +17,10 @@ class TextTheme : Component<TextThemeState, TextTheme>() {
     @ReactiveProperty
     var color: Color = Color.BLACK
 
-    override fun initState() = TextThemeState()
+    override fun initState(component: TextTheme) = TextThemeState(component)
 }
 
-class TextThemeState : State<TextThemeState, TextTheme>() {
+class TextThemeState(override val component: TextTheme) : State() {
     override fun render() = component.child
 }
 
