@@ -3,7 +3,7 @@ package com.github.ashlanderr.kotlin.ui.graphics
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics
 
-typealias CanvasHandler = (g: Graphics) -> Unit
+typealias CanvasHandler = (g: Graphics, w: Double, h: Double) -> Unit
 
 class Canvas : AbstractNode() {
     @ReactiveProperty
@@ -23,7 +23,7 @@ class Canvas : AbstractNode() {
         val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
 
         g.translate(renderLeft.toInt(), renderTop.toInt())
-        render?.invoke(g)
+        render?.invoke(g, renderWidth, renderHeight)
         g.translate(-renderLeft.toInt(), -renderTop.toInt())
 
         g.popClip(clip)

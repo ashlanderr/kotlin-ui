@@ -1,59 +1,81 @@
 package com.github.ashlanderr.kotlin.ui.graphics
 
-import com.github.ashlanderr.kotlin.ui.core.*
+import com.github.ashlanderr.kotlin.ui.core.State
 
-typealias AnimationFrameHandler = (time: Double) -> Node
 typealias AnimationCompletedHandler = () -> Unit
 
-class Animation : Component<AnimationState, Animation>() {
-    @ReactiveProperty
-    var function: AnimationFunction = AnimationFunction.LINEAR
+class AnimationManager(private val state: State<*, *>) {
+    private val animations = mutableListOf<AnimationController>()
 
-    @ReactiveProperty
-    var mode: AnimationMode = AnimationMode.INFINITE
+    fun add(animation: AnimationController): AnimationController {
+        animations.add(animation)
+        return animation
+    }
 
-    @ReactiveProperty
-    var duration: Double = 1.0
+    fun remove(animation: AnimationController) {
+        animations.remove(animation)
+    }
 
-    @ReactiveProperty
-    var onFrame: AnimationFrameHandler? = null
-
-    @ReactiveProperty
-    var onCompleted: AnimationCompletedHandler? = null
-
-    override fun initState() = AnimationState()
+    fun update() {
+        animations.removeIf { it.update(state) }
+    }
 }
 
-class AnimationState : State<AnimationState, Animation>() {
-    private var startTime = System.nanoTime()
+class AnimationController(
+        private val function: AnimationFunction = AnimationFunction.LINEAR,
+        private val mode: AnimationMode = AnimationMode.INFINITE,
+        private val duration: Double = 1.0,
+        private var onCompleted: AnimationCompletedHandler? = null,
+        running: Boolean = true
+) {
+    enum class AnimationState {
+        RUNNING,
+        PAUSED,
+        COMPLETED
+    }
+
+    private var state = if (running) AnimationState.RUNNING else AnimationState.PAUSED
+    private var lastTimestamp = System.nanoTime()
     private var times = 0
-    private var completed = false
+    private var x = 0.0
 
-    override fun render(): Node {
-        var time = 1.0
+    var value: Double = 0.0
+        private set
 
-        if (!completed) {
-            update {
-                val currentTime = System.nanoTime()
-                time = (currentTime - startTime) / (1000000000.0 * component.duration)
+    fun resume() {
+        if (state == AnimationState.PAUSED) {
+            state = AnimationState.RUNNING
+            lastTimestamp = System.nanoTime()
+        }
+    }
 
-                if (time > 1.0) {
+    fun pause() {
+        if (state == AnimationState.RUNNING) {
+            state = AnimationState.PAUSED
+        }
+    }
+
+    fun update(componentState: State<*, *>): Boolean {
+        if (state == AnimationState.RUNNING) {
+            componentState.update {
+                val newTimestamp = System.nanoTime()
+                x += (newTimestamp - lastTimestamp) / (1000000000.0 * duration)
+                lastTimestamp = newTimestamp
+
+                if (x > 1.0) {
                     times += 1
-                    completed = component.mode.isCompleted(times)
-                    if (!completed) {
-                        time = 0.0
-                        startTime = currentTime
+                    if (mode.isCompleted(times)) {
+                        state = AnimationState.COMPLETED
+                        x = 1.0
+                        onCompleted?.invoke()
                     } else {
-                        time = 1.0
-                        component.onCompleted?.invoke()
+                        x = 0.0
                     }
                 }
             }
         }
 
-        val x = component.function.transform(time)
-        return component.onFrame?.invoke(x) ?: EmptyNode
+        value = function.transform(x)
+        return state == AnimationState.COMPLETED
     }
 }
-
-fun animation(builder: Builder<Animation>) = build(builder)
