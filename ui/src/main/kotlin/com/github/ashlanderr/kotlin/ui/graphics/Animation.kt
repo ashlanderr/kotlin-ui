@@ -22,11 +22,11 @@ class AnimationManager(private val state: State<*, *>) {
 }
 
 class AnimationController(
-        private val function: AnimationFunction = AnimationFunction.LINEAR,
-        private val mode: AnimationMode = AnimationMode.INFINITE,
-        private val duration: Double = 1.0,
-        private var onCompleted: AnimationCompletedHandler? = null,
-        running: Boolean = true
+    private val function: AnimationFunction = AnimationFunction.LINEAR,
+    private val mode: AnimationMode = AnimationMode.INFINITE,
+    private val duration: Double = 1.0,
+    private var onCompleted: AnimationCompletedHandler? = null,
+    running: Boolean = true
 ) {
     enum class AnimationState {
         RUNNING,

@@ -20,7 +20,7 @@ class SizedBox : AbstractNode() {
         renderTop = top
     }
 
-    override fun render(g: Graphics) { }
+    override fun render(g: Graphics) {}
 
     override fun mount(parent: Node?) {
         this.parent = parent

@@ -48,11 +48,11 @@ abstract class Application : Node, JFrame() {
         addMouseListener(mouseListener)
     }
 
-    final override fun measure(g: Graphics, w: Constraint, h: Constraint) { }
-    final override fun arrange(left: Double, top: Double) { }
-    final override fun render(g: Graphics) { }
-    final override fun mount(parent: Node?) { }
-    final override fun unmount() { }
+    final override fun measure(g: Graphics, w: Constraint, h: Constraint) {}
+    final override fun arrange(left: Double, top: Double) {}
+    final override fun render(g: Graphics) {}
+    final override fun mount(parent: Node?) {}
+    final override fun unmount() {}
     final override fun childAtPoint(point: Point) = root.childAtPoint(point)
 
     abstract fun render(): Node

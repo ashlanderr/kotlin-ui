@@ -46,8 +46,8 @@ object MergeProcessor {
             val mergedSet = HashSet<Node>(currentList.size)
 
             val currentKeys = currentList
-                    .filter { it.key != null }
-                    .associateBy { it.key }
+                .filter { it.key != null }
+                .associateBy { it.key }
 
             for (nextIndex in nextList.indices) {
                 val nextValue = nextList[nextIndex]
@@ -76,11 +76,11 @@ object MergeProcessor {
 
     private fun unmount(clazz: KClass<out Node>, node: Node) {
         getProps(clazz)
-                .mapNotNull { it.get(node) as? Node }
-                .forEach { unmount(it::class, it) }
+            .mapNotNull { it.get(node) as? Node }
+            .forEach { unmount(it::class, it) }
         getLists(clazz)
-                .flatMap { it.get(node) }
-                .forEach { unmount(it::class, it) }
+            .flatMap { it.get(node) }
+            .forEach { unmount(it::class, it) }
 
         println("unmount $node")
         node.unmount()
@@ -91,31 +91,31 @@ object MergeProcessor {
         node.mount(parent)
 
         getNodes(clazz)
-                .map { it.get(node) }
-                .forEach { mount(it::class, it, node) }
+            .map { it.get(node) }
+            .forEach { mount(it::class, it, node) }
         getLists(clazz)
-                .flatMap { it.get(node) }
-                .forEach { mount(it::class, it, node) }
+            .flatMap { it.get(node) }
+            .forEach { mount(it::class, it, node) }
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun getProps(clazz: KClass<out Node>): List<KMutableProperty1<Node, Any?>> {
         return clazz.memberProperties
-                .filter { it.findAnnotation<ReactiveProperty>() != null }
-                .map { it as KMutableProperty1<Node, Any?> }
+            .filter { it.findAnnotation<ReactiveProperty>() != null }
+            .map { it as KMutableProperty1<Node, Any?> }
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun getNodes(clazz: KClass<out Node>): List<KMutableProperty1<Node, Node>> {
         return clazz.memberProperties
-                .filter { it.findAnnotation<ReactiveNode>() != null }
-                .map { it as KMutableProperty1<Node, Node> }
+            .filter { it.findAnnotation<ReactiveNode>() != null }
+            .map { it as KMutableProperty1<Node, Node> }
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun getLists(clazz: KClass<out Node>): List<KProperty1<Node, MutableList<Node>>> {
         return clazz.memberProperties
-                .filter { it.findAnnotation<ReactiveList>() != null }
-                .map { it as KProperty1<Node, MutableList<Node>> }
+            .filter { it.findAnnotation<ReactiveList>() != null }
+            .map { it as KProperty1<Node, MutableList<Node>> }
     }
 }

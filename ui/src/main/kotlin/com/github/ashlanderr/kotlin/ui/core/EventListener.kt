@@ -9,7 +9,7 @@ abstract class AbstractEvent(val target: Node) {
     override fun toString(): String {
         val clazz = this::class
         val props = clazz.memberProperties
-                .map { Pair(it.name, (it as KProperty1<AbstractEvent, Any?>).get(this)) }
+            .map { Pair(it.name, (it as KProperty1<AbstractEvent, Any?>).get(this)) }
         return clazz.simpleName + props.joinToString(", ", "(", ")") { "${it.first}=${it.second}" }
     }
 }

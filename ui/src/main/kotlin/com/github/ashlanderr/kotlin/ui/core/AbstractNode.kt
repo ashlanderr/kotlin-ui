@@ -21,10 +21,10 @@ abstract class AbstractNode : Node {
     @ReactiveProperty
     override var key: Any? = null
 
-    override fun measure(g: Graphics, w: Constraint, h: Constraint) { }
-    override fun arrange(left: Double, top: Double) { }
-    override fun render(g: Graphics) { }
-    override fun mount(parent: Node?) { }
-    override fun unmount() { }
+    override fun measure(g: Graphics, w: Constraint, h: Constraint) {}
+    override fun arrange(left: Double, top: Double) {}
+    override fun render(g: Graphics) {}
+    override fun mount(parent: Node?) {}
+    override fun unmount() {}
     override fun childAtPoint(point: Point): Node? = null
 }

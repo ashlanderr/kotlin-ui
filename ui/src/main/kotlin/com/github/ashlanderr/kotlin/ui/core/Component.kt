@@ -2,7 +2,7 @@ package com.github.ashlanderr.kotlin.ui.core
 
 import java.awt.Graphics
 
-abstract class Component<S : State<S, C>, C: Component<S, C>> : Node {
+abstract class Component<S : State<S, C>, C : Component<S, C>> : Node {
     override val renderLeft get() = child.renderLeft
     override val renderTop get() = child.renderTop
     override val renderWidth get() = child.renderWidth
