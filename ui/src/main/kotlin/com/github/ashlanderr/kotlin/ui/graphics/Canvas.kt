@@ -3,7 +3,7 @@ package com.github.ashlanderr.kotlin.ui.graphics
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics
 
-abstract class Canvas : Node {
+abstract class Canvas(key: Any? = null) : Node {
     final override var renderLeft: Double = 0.0
         private set
 
@@ -19,7 +19,7 @@ abstract class Canvas : Node {
     final override var parent: Node? = null
         private set
 
-    final override var key: Any? = null
+    final override var key: Any? = key
         private set
 
     final override fun measure(g: Graphics, w: Constraint, h: Constraint) {

@@ -2,12 +2,13 @@ package com.github.ashlanderr.kotlin.ui.core
 
 import java.awt.Graphics
 
-abstract class Component<S : State, C : Component<S, C>> : Node {
+abstract class Component<S : State, C : Component<S, C>>(
+    final override var key: Any? = null
+) : Node {
     override val renderLeft get() = child.renderLeft
     override val renderTop get() = child.renderTop
     override val renderWidth get() = child.renderWidth
     override val renderHeight get() = child.renderHeight
-    final override var key: Any? = null
 
     final override var parent: Node? = null
         private set
