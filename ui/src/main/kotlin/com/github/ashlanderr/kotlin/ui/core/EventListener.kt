@@ -1,6 +1,6 @@
 package com.github.ashlanderr.kotlin.ui.core
 
-import java.awt.Graphics
+import java.awt.Graphics2D
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
@@ -35,7 +35,7 @@ class EventListenerNode : EventListener, AbstractNode() {
     @ReactiveNode
     var child: Node = EmptyNode
 
-    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+    override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         child.measure(g, w, h)
         renderWidth = child.renderWidth
         renderHeight = child.renderHeight
@@ -47,7 +47,7 @@ class EventListenerNode : EventListener, AbstractNode() {
         renderTop = top
     }
 
-    override fun render(g: Graphics) {
+    override fun render(g: Graphics2D) {
         child.render(g)
     }
 

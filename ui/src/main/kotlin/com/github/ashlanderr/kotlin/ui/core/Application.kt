@@ -2,6 +2,7 @@ package com.github.ashlanderr.kotlin.ui.core
 
 import java.awt.Color
 import java.awt.Graphics
+import java.awt.Graphics2D
 import java.awt.Image
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -48,9 +49,9 @@ abstract class Application : Node, JFrame() {
         addMouseListener(mouseListener)
     }
 
-    final override fun measure(g: Graphics, w: Constraint, h: Constraint) {}
+    final override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {}
     final override fun arrange(left: Double, top: Double) {}
-    final override fun render(g: Graphics) {}
+    final override fun render(g: Graphics2D) {}
     final override fun mount(parent: Node?) {}
     final override fun unmount() {}
     final override fun childAtPoint(point: Point) = root.childAtPoint(point)
@@ -77,7 +78,7 @@ abstract class Application : Node, JFrame() {
         animationTimer.start()
     }
 
-    private fun getBuffer(): Graphics {
+    private fun getBuffer(): Graphics2D {
         if (bufferImage == null || bufferWidth != width || bufferHeight != height) {
             bufferGraphics?.dispose()
             bufferImage?.flush()
@@ -89,7 +90,7 @@ abstract class Application : Node, JFrame() {
             bufferHeight = height
         }
 
-        return bufferGraphics!!
+        return bufferGraphics as Graphics2D
     }
 
     private fun animationFrame() {

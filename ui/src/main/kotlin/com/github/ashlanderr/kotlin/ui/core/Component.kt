@@ -1,6 +1,6 @@
 package com.github.ashlanderr.kotlin.ui.core
 
-import java.awt.Graphics
+import java.awt.Graphics2D
 
 abstract class Component<S : State, C : Component<S, C>>(
     final override var key: Any? = null

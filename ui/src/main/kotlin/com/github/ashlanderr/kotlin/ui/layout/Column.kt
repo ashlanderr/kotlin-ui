@@ -1,7 +1,7 @@
 package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
-import java.awt.Graphics
+import java.awt.Graphics2D
 import kotlin.math.max
 
 class Column : AbstractNode(), Parent {
@@ -11,7 +11,7 @@ class Column : AbstractNode(), Parent {
     @ReactiveProperty
     var align: HorizontalAlign = HorizontalAlign.LEFT
 
-    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+    override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         renderWidth = 0.0
         val ch = Constraint.Min(Double.POSITIVE_INFINITY)
         var cw: Constraint = Constraint.Min(w.size)
@@ -43,7 +43,7 @@ class Column : AbstractNode(), Parent {
         }
     }
 
-    override fun render(g: Graphics) {
+    override fun render(g: Graphics2D) {
         val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
 
         for (child in children) {

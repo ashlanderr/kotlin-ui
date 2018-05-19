@@ -1,6 +1,6 @@
 package com.github.ashlanderr.kotlin.ui.core
 
-import java.awt.Graphics
+import java.awt.Graphics2D
 
 interface Node {
     val renderLeft: Double
@@ -10,9 +10,9 @@ interface Node {
     val parent: Node?
     val key: Any?
 
-    fun measure(g: Graphics, w: Constraint, h: Constraint)
+    fun measure(g: Graphics2D, w: Constraint, h: Constraint)
     fun arrange(left: Double, top: Double)
-    fun render(g: Graphics)
+    fun render(g: Graphics2D)
 
     fun mount(parent: Node?)
     fun unmount()

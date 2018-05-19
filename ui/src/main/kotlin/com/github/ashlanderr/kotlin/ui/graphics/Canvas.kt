@@ -1,7 +1,7 @@
 package com.github.ashlanderr.kotlin.ui.graphics
 
 import com.github.ashlanderr.kotlin.ui.core.*
-import java.awt.Graphics
+import java.awt.Graphics2D
 
 abstract class Canvas(key: Any? = null) : Node {
     final override var renderLeft: Double = 0.0
@@ -22,7 +22,7 @@ abstract class Canvas(key: Any? = null) : Node {
     final override var key: Any? = key
         private set
 
-    final override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+    final override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         renderWidth = w.compute(0.0, w.size)
         renderHeight = h.compute(0.0, h.size)
     }
@@ -32,7 +32,7 @@ abstract class Canvas(key: Any? = null) : Node {
         renderTop = top
     }
 
-    final override fun render(g: Graphics) {
+    final override fun render(g: Graphics2D) {
         val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
 
         g.translate(renderLeft.toInt(), renderTop.toInt())
@@ -52,5 +52,5 @@ abstract class Canvas(key: Any? = null) : Node {
 
     final override fun childAtPoint(point: Point): Node? = null
 
-    abstract fun render(g: Graphics, w: Double, h: Double)
+    abstract fun render(g: Graphics2D, w: Double, h: Double)
 }

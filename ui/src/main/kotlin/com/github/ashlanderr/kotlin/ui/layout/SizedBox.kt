@@ -1,7 +1,7 @@
 package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
-import java.awt.Graphics
+import java.awt.Graphics2D
 
 class SizedBox : AbstractNode() {
     @ReactiveProperty
@@ -10,7 +10,7 @@ class SizedBox : AbstractNode() {
     @ReactiveProperty
     var height: Double = 0.0
 
-    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+    override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         renderWidth = width
         renderHeight = height
     }
@@ -20,7 +20,7 @@ class SizedBox : AbstractNode() {
         renderTop = top
     }
 
-    override fun render(g: Graphics) {}
+    override fun render(g: Graphics2D) {}
 
     override fun mount(parent: Node?) {
         this.parent = parent

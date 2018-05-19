@@ -1,7 +1,7 @@
 package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
-import java.awt.Graphics
+import java.awt.Graphics2D
 
 data class Indent(val left: Double, val top: Double, val right: Double, val bottom: Double) {
     companion object {
@@ -20,7 +20,7 @@ class Padding : AbstractNode() {
     @ReactiveNode
     var child: Node = EmptyNode
 
-    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+    override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         val horizontalPadding = padding.left + padding.right
         val verticalPadding = padding.top + padding.bottom
         val cw = w.copy(w.size - horizontalPadding)
@@ -38,7 +38,7 @@ class Padding : AbstractNode() {
         child.arrange(left + padding.left, top + padding.top)
     }
 
-    override fun render(g: Graphics) {
+    override fun render(g: Graphics2D) {
         child.render(g)
     }
 

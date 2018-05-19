@@ -1,7 +1,7 @@
 package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
-import java.awt.Graphics
+import java.awt.Graphics2D
 import kotlin.math.max
 import kotlin.math.min
 
@@ -21,7 +21,7 @@ class ConstrainedBox : AbstractNode() {
     @ReactiveNode
     var child: Node = EmptyNode
 
-    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+    override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         renderWidth = max(minWidth, min(maxWidth, w.size))
         renderHeight = max(minHeight, min(maxHeight, h.size))
         child.measure(g, Constraint.Max(renderWidth), Constraint.Max(renderHeight))
@@ -35,7 +35,7 @@ class ConstrainedBox : AbstractNode() {
         child.arrange(left, top)
     }
 
-    override fun render(g: Graphics) {
+    override fun render(g: Graphics2D) {
         child.render(g)
     }
 

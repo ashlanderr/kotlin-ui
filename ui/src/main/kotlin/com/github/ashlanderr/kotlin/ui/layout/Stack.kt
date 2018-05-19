@@ -1,14 +1,14 @@
 package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
-import java.awt.Graphics
+import java.awt.Graphics2D
 import kotlin.math.max
 
 class Stack : AbstractNode(), Parent {
     @ReactiveList
     override var children: MutableList<Node> = ArrayList()
 
-    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+    override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         var cw: Constraint = Constraint.Min(w.size)
         var ch: Constraint = Constraint.Min(h.size)
 
@@ -43,7 +43,7 @@ class Stack : AbstractNode(), Parent {
         }
     }
 
-    override fun render(g: Graphics) {
+    override fun render(g: Graphics2D) {
         for (child in children) {
             child.render(g)
         }

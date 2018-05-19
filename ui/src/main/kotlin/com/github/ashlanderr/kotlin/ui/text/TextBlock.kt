@@ -2,7 +2,7 @@ package com.github.ashlanderr.kotlin.ui.text
 
 import com.github.ashlanderr.kotlin.ui.core.*
 import com.github.ashlanderr.kotlin.ui.layout.HorizontalAlign
-import java.awt.Graphics
+import java.awt.Graphics2D
 
 class TextBlock : AbstractNode() {
     private data class Line(var left: Double, var width: Double, val text: String)
@@ -18,7 +18,7 @@ class TextBlock : AbstractNode() {
     @ReactiveProperty
     var align: HorizontalAlign = HorizontalAlign.LEFT
 
-    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+    override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         val fm = g.fontMetrics
         val breaks = wrapping.split(text, fm, w.size.toInt())
 
@@ -40,7 +40,7 @@ class TextBlock : AbstractNode() {
         renderTop = top
     }
 
-    override fun render(g: Graphics) {
+    override fun render(g: Graphics2D) {
         val fm = g.fontMetrics
         var top = renderTop + fm.ascent
         val theme = TextTheme.of(this)

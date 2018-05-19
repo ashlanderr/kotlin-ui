@@ -1,7 +1,7 @@
 package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
-import java.awt.Graphics
+import java.awt.Graphics2D
 
 class AspectRatio : AbstractNode() {
     @ReactiveProperty
@@ -10,7 +10,7 @@ class AspectRatio : AbstractNode() {
     @ReactiveNode
     var child: Node = EmptyNode
 
-    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+    override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         val maxWidth = w.compute(0.0, w.size)
         val maxHeight = h.compute(0.0, h.size)
         val ratioWidth = maxHeight * ratio
@@ -33,7 +33,7 @@ class AspectRatio : AbstractNode() {
         child.arrange(left, top)
     }
 
-    override fun render(g: Graphics) {
+    override fun render(g: Graphics2D) {
         val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
 
         child.render(g)

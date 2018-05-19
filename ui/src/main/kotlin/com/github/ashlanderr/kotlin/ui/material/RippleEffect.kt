@@ -7,7 +7,7 @@ import com.github.ashlanderr.kotlin.ui.graphics.AnimationMode
 import com.github.ashlanderr.kotlin.ui.graphics.Canvas
 import com.github.ashlanderr.kotlin.ui.layout.stack
 import java.awt.Color
-import java.awt.Graphics
+import java.awt.Graphics2D
 import kotlin.math.sqrt
 
 class RippleEffect : Component<RippleEffectState, RippleEffect>() {
@@ -93,7 +93,7 @@ class RippleCanvas(
     @ReactiveProperty var radiusTime: Double,
     @ReactiveProperty var alphaTime: Double
 ) : Canvas() {
-    override fun render(g: Graphics, w: Double, h: Double) {
+    override fun render(g: Graphics2D, w: Double, h: Double) {
         val radius = radiusTime * sqrt(w * w + h * h)
         val left = point.x - radius
         val top = point.y - radius

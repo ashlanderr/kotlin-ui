@@ -1,6 +1,6 @@
 package com.github.ashlanderr.kotlin.ui.core
 
-import java.awt.Graphics
+import java.awt.Graphics2D
 
 abstract class AbstractNode : Node {
     override var renderLeft: Double = 0.0
@@ -21,9 +21,9 @@ abstract class AbstractNode : Node {
     @ReactiveProperty
     override var key: Any? = null
 
-    override fun measure(g: Graphics, w: Constraint, h: Constraint) {}
+    override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {}
     override fun arrange(left: Double, top: Double) {}
-    override fun render(g: Graphics) {}
+    override fun render(g: Graphics2D) {}
     override fun mount(parent: Node?) {}
     override fun unmount() {}
     override fun childAtPoint(point: Point): Node? = null
