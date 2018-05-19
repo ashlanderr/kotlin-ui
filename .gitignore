@@ -4,4 +4,6 @@
 /out
 /ui/build
 /ui/out
+/examples/build
+/examples/out
 /*.iml
