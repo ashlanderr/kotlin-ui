@@ -1,9 +1,6 @@
 package com.github.ashlanderr.kotlin.ui.core
 
-import java.awt.Color
-import java.awt.Graphics
-import java.awt.Graphics2D
-import java.awt.Image
+import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.JFrame
@@ -21,7 +18,7 @@ abstract class Application : Node, JFrame() {
     private var bufferWidth = 0
     private var bufferHeight = 0
     private var bufferImage: Image? = null
-    private var bufferGraphics: Graphics? = null
+    private var bufferGraphics: Graphics2D? = null
 
     private var root: Node = EmptyNode
     private var animationRequested = false
@@ -84,13 +81,14 @@ abstract class Application : Node, JFrame() {
             bufferImage?.flush()
 
             bufferImage = createImage(width, height)
-            bufferGraphics = bufferImage!!.graphics
+            bufferGraphics = bufferImage!!.graphics as Graphics2D
+            bufferGraphics!!.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
 
             bufferWidth = width
             bufferHeight = height
         }
 
-        return bufferGraphics as Graphics2D
+        return bufferGraphics!!
     }
 
     private fun animationFrame() {
