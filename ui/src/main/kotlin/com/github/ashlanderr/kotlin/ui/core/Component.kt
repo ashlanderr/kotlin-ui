@@ -18,7 +18,8 @@ abstract class Component<S : State, C : Component<S, C>>(
 
     private var child: Node = EmptyNode
 
-    override fun measure(g: Graphics, w: Constraint, h: Constraint) {
+    override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
+        renderState()
         child.measure(g, w, h)
     }
 
@@ -26,8 +27,7 @@ abstract class Component<S : State, C : Component<S, C>>(
         child.arrange(left, top)
     }
 
-    override fun render(g: Graphics) {
-        renderState()
+    override fun render(g: Graphics2D) {
         child.render(g)
     }
 
