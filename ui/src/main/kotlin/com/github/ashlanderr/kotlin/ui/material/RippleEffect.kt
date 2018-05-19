@@ -43,6 +43,7 @@ class RippleEffectState(override val component: RippleEffect) : State() {
                 +component.child
                 ripples.forEach {
                     +Ripple(
+                        key = it,
                         point = it.point,
                         released = it.released,
                         onCompleted = { ripples.remove(it) }
@@ -56,10 +57,11 @@ class RippleEffectState(override val component: RippleEffect) : State() {
 fun rippleEffect(builder: Builder<RippleEffect>) = build(builder)
 
 class Ripple(
+    key: Any?,
     @ReactiveProperty var point: Point,
     @ReactiveProperty var released: Boolean,
     @ReactiveProperty var onCompleted: () -> Unit
-) : Component<RippleState, Ripple>() {
+) : Component<RippleState, Ripple>(key) {
     override fun initState(component: Ripple) = RippleState(component)
 }
 
