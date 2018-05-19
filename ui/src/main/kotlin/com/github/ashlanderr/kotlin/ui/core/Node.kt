@@ -30,3 +30,11 @@ fun List<Node>.childAtPoint(point: Point): Node? {
     }
     return null
 }
+
+inline fun <reified T : Node> Node.ancestor(): T? {
+    var parent: Node? = this
+    while (parent != null && parent !is T) {
+        parent = parent.parent
+    }
+    return parent as T?
+}
