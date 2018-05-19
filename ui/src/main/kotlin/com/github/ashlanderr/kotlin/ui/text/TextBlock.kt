@@ -2,7 +2,6 @@ package com.github.ashlanderr.kotlin.ui.text
 
 import com.github.ashlanderr.kotlin.ui.core.*
 import com.github.ashlanderr.kotlin.ui.layout.HorizontalAlign
-import java.awt.Color
 import java.awt.Graphics
 
 class TextBlock : AbstractNode() {
@@ -44,8 +43,9 @@ class TextBlock : AbstractNode() {
     override fun render(g: Graphics) {
         val fm = g.fontMetrics
         var top = renderTop + fm.ascent
+        val theme = TextTheme.of(this)
 
-        g.color = Color.BLACK
+        g.color = theme.color
 
         for (line in lines) {
             g.drawString(line.text, (renderLeft + line.left).toInt(), top.toInt())
