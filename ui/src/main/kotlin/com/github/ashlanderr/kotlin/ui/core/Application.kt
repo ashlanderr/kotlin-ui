@@ -32,6 +32,16 @@ abstract class Application : Node, JFrame() {
             val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
             eventProcessor.mouseClick(point)
         }
+
+        override fun mousePressed(e: MouseEvent) {
+            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
+            eventProcessor.mouseDown(point)
+        }
+
+        override fun mouseReleased(e: MouseEvent) {
+            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
+            eventProcessor.mouseUp(point)
+        }
     }
 
     init {
