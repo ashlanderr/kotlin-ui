@@ -2,9 +2,14 @@ package com.github.ashlanderr.kotlin.ui.text
 
 import com.github.ashlanderr.kotlin.ui.core.*
 import com.github.ashlanderr.kotlin.ui.layout.HorizontalAlign
+import java.awt.Font
 import java.awt.Graphics2D
 
 class TextBlock : AbstractNode() {
+    companion object {
+        val DEFAULT_FONT = Font("san serif", Font.PLAIN, 12)
+    }
+
     private data class Line(var left: Double, var width: Double, val text: String)
 
     private var lines: List<Line> = emptyList()
@@ -18,7 +23,11 @@ class TextBlock : AbstractNode() {
     @ReactiveProperty
     var align: HorizontalAlign = HorizontalAlign.LEFT
 
+    @ReactiveProperty
+    var font: Font = DEFAULT_FONT
+
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
+        g.font = font
         val fm = g.fontMetrics
         val breaks = wrapping.split(text, fm, w.size.toInt())
 
@@ -41,6 +50,7 @@ class TextBlock : AbstractNode() {
     }
 
     override fun render(g: Graphics2D) {
+        g.font = font
         val fm = g.fontMetrics
         var top = renderTop + fm.ascent
         val theme = TextTheme.of(this)
