@@ -1,12 +1,19 @@
 package com.github.ashlanderr.kotlin.ui.material
 
-import com.github.ashlanderr.kotlin.ui.core.Node
-import com.github.ashlanderr.kotlin.ui.core.ReactiveProperty
-import com.github.ashlanderr.kotlin.ui.core.StatelessComponent
-import com.github.ashlanderr.kotlin.ui.core.ancestor
+import com.github.ashlanderr.kotlin.ui.core.*
 import com.github.ashlanderr.kotlin.ui.graphics.background
-import com.github.ashlanderr.kotlin.ui.text.textTheme
+import com.github.ashlanderr.kotlin.ui.text.TextStyle
 import java.awt.Color
+import java.awt.Font
+
+data class TextTheme(
+    val button: TextStyle = TextStyle(
+        color = Color.BLACK,
+        fontFamily = Font.SANS_SERIF,
+        fontStyle = Font.BOLD,
+        fontSize = 12
+    )
+)
 
 data class ThemeData(
     val primary1Color: Color = Color(0, 188, 212),
@@ -21,7 +28,8 @@ data class ThemeData(
     val canvasColor: Color = Color(255, 255, 255),
     val borderColor: Color = Color(224, 224, 224),
     val disabledColor: Color = Color(0, 0, 0, 77),
-    val shadowColor: Color = Color(0, 0, 0)
+    val shadowColor: Color = Color(0, 0, 0),
+    val textTheme: TextTheme = TextTheme()
 )
 
 class Theme(
@@ -31,12 +39,12 @@ class Theme(
     companion object {
         private val DEFAULT_THEME = ThemeData()
         fun of(node: Node) = node.ancestor<Theme>()?.data ?: DEFAULT_THEME
+        fun of(state: State) = of(state.component)
     }
 
-    override fun render() = background {
-        color = data.canvasColor
-        child = textTheme {
-            color = data.textColor
+    override fun render(): Node {
+        return background {
+            color = data.canvasColor
             child = this@Theme.child
         }
     }

@@ -6,10 +6,6 @@ import java.awt.Font
 import java.awt.Graphics2D
 
 class TextBlock : AbstractNode() {
-    companion object {
-        val DEFAULT_FONT = Font("san serif", Font.PLAIN, 12)
-    }
-
     private data class Line(var left: Double, var width: Double, val text: String)
 
     private var lines: List<Line> = emptyList()
@@ -24,10 +20,10 @@ class TextBlock : AbstractNode() {
     var align: HorizontalAlign = HorizontalAlign.LEFT
 
     @ReactiveProperty
-    var font: Font = DEFAULT_FONT
+    var style: TextStyle? = null
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
-        g.font = font
+        applyStyle(g)
         val fm = g.fontMetrics
         val breaks = wrapping.split(text, fm, w.size.toInt())
 
@@ -50,12 +46,9 @@ class TextBlock : AbstractNode() {
     }
 
     override fun render(g: Graphics2D) {
-        g.font = font
+        applyStyle(g)
         val fm = g.fontMetrics
         var top = renderTop + fm.ascent
-        val theme = TextTheme.of(this)
-
-        g.color = theme.color
 
         for (line in lines) {
             g.drawString(line.text, (renderLeft + line.left).toInt(), top.toInt())
@@ -69,6 +62,13 @@ class TextBlock : AbstractNode() {
 
     override fun unmount() {
         this.parent = null
+    }
+
+    private fun applyStyle(g: Graphics2D) {
+        val defaultStyle = DefaultTextStyle.of(this)
+        val style = this.style ?: defaultStyle
+        g.font = Font(style.fontFamily, style.fontStyle, style.fontSize)
+        g.color = style.color
     }
 }
 

@@ -14,6 +14,12 @@ class RippleEffect : StatefulComponent<RippleEffectState, RippleEffect>() {
     @ReactiveProperty
     var child: Node = EmptyNode
 
+    @ReactiveProperty
+    var color: Color = Color.BLACK
+
+    @ReactiveProperty
+    var enabled: Boolean = true
+
     override fun initState(component: RippleEffect) = RippleEffectState(component)
 }
 
@@ -25,11 +31,11 @@ class RippleEffectState(override val component: RippleEffect) : State() {
 
     override fun render(): Node {
         animations.update()
+
         return eventListener {
             onMouseDown = {
                 update {
-                    val ripple = RippleKey(it.point, false)
-                    ripples.add(ripple)
+                    if (component.enabled) ripples.add(RippleKey(it.point, false))
                 }
                 true
             }
@@ -44,6 +50,7 @@ class RippleEffectState(override val component: RippleEffect) : State() {
                 ripples.forEach {
                     +Ripple(
                         key = it,
+                        color = component.color,
                         point = it.point,
                         released = it.released,
                         onCompleted = { ripples.remove(it) }
@@ -58,6 +65,7 @@ fun rippleEffect(builder: Builder<RippleEffect>) = build(builder)
 
 class Ripple(
     key: Any?,
+    @ReactiveProperty var color: Color,
     @ReactiveProperty var point: Point,
     @ReactiveProperty var released: Boolean,
     @ReactiveProperty var onCompleted: () -> Unit
@@ -84,11 +92,12 @@ class RippleState(override val component: Ripple) : State() {
     override fun render(): Node {
         animations.update()
         if (component.released) fadeAnimation.resume()
-        return RippleCanvas(component.point, growAnimation.value, fadeAnimation.value)
+        return RippleCanvas(component.color, component.point, growAnimation.value, fadeAnimation.value)
     }
 }
 
 class RippleCanvas(
+    @ReactiveProperty var color: Color,
     @ReactiveProperty var point: Point,
     @ReactiveProperty var radiusTime: Double,
     @ReactiveProperty var alphaTime: Double
@@ -100,7 +109,7 @@ class RippleCanvas(
         val width = radius * 2
         val height = radius * 2
         val alpha = (1 - alphaTime) * 0.2
-        g.color = Color(0, 0, 0, (alpha * 255).toInt())
+        g.color = Color(color.red, color.green, color.blue, (alpha * 255).toInt())
         g.fillOval(left.toInt(), top.toInt(), width.toInt(), height.toInt())
     }
 }
