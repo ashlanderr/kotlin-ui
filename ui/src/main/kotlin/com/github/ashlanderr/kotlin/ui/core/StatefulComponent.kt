@@ -2,7 +2,7 @@ package com.github.ashlanderr.kotlin.ui.core
 
 import java.awt.Graphics2D
 
-abstract class Component<S : State, C : Component<S, C>>(
+abstract class StatefulComponent<S : State, C : StatefulComponent<S, C>>(
     final override var key: Any? = null
 ) : Node {
     override val renderLeft get() = child.renderLeft

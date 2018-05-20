@@ -1,14 +1,14 @@
 package com.github.ashlanderr.kotlin.ui.counter
 
 import com.github.ashlanderr.kotlin.ui.core.Application
-import com.github.ashlanderr.kotlin.ui.core.Component
 import com.github.ashlanderr.kotlin.ui.core.State
+import com.github.ashlanderr.kotlin.ui.core.StatefulComponent
 import com.github.ashlanderr.kotlin.ui.layout.*
 import com.github.ashlanderr.kotlin.ui.material.flatButton
 import com.github.ashlanderr.kotlin.ui.text.textBlock
 import javax.swing.JFrame
 
-class Counter : Component<CounterState, Counter>() {
+class Counter : StatefulComponent<CounterState, Counter>() {
     override fun initState(component: Counter) = CounterState(component)
 }
 

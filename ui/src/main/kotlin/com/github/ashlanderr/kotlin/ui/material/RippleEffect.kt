@@ -10,7 +10,7 @@ import java.awt.Color
 import java.awt.Graphics2D
 import kotlin.math.sqrt
 
-class RippleEffect : Component<RippleEffectState, RippleEffect>() {
+class RippleEffect : StatefulComponent<RippleEffectState, RippleEffect>() {
     @ReactiveProperty
     var child: Node = EmptyNode
 
@@ -61,7 +61,7 @@ class Ripple(
     @ReactiveProperty var point: Point,
     @ReactiveProperty var released: Boolean,
     @ReactiveProperty var onCompleted: () -> Unit
-) : Component<RippleState, Ripple>(key) {
+) : StatefulComponent<RippleState, Ripple>(key) {
     override fun initState(component: Ripple) = RippleState(component)
 }
 

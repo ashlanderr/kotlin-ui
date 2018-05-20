@@ -1,9 +1,9 @@
 package com.github.ashlanderr.kotlin.ui.material
 
-import com.github.ashlanderr.kotlin.ui.core.Component
 import com.github.ashlanderr.kotlin.ui.core.Node
 import com.github.ashlanderr.kotlin.ui.core.ReactiveProperty
 import com.github.ashlanderr.kotlin.ui.core.State
+import com.github.ashlanderr.kotlin.ui.core.StatefulComponent
 import com.github.ashlanderr.kotlin.ui.graphics.Canvas
 import com.github.ashlanderr.kotlin.ui.layout.Indent
 import com.github.ashlanderr.kotlin.ui.layout.padding
@@ -18,7 +18,7 @@ import kotlin.math.min
 class Elevation(
     @ReactiveProperty var elevation: Double,
     @ReactiveProperty var child: Node
-) : Component<ElevationState, Elevation>() {
+) : StatefulComponent<ElevationState, Elevation>() {
     override fun initState(component: Elevation) = ElevationState(component)
 }
 

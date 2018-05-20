@@ -3,7 +3,7 @@ package com.github.ashlanderr.kotlin.ui.text
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Color
 
-class TextTheme : Component<TextThemeState, TextTheme>() {
+class TextTheme : StatefulComponent<TextThemeState, TextTheme>() {
     companion object {
         val DEFAULT = TextTheme()
 

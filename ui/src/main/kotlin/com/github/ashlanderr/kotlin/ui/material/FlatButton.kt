@@ -2,7 +2,7 @@ package com.github.ashlanderr.kotlin.ui.material
 
 import com.github.ashlanderr.kotlin.ui.core.*
 
-class FlatButton : Component<FlatButtonState, FlatButton>() {
+class FlatButton : StatefulComponent<FlatButtonState, FlatButton>() {
     @ReactiveProperty
     var content: Node = EmptyNode
 

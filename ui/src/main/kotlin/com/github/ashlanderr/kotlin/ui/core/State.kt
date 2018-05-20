@@ -1,7 +1,7 @@
 package com.github.ashlanderr.kotlin.ui.core
 
 abstract class State {
-    abstract val component: Component<*, *>
+    abstract val component: StatefulComponent<*, *>
     abstract fun render(): Node
     open fun dispose() {}
 
@@ -11,5 +11,5 @@ abstract class State {
     }
 
     inline fun <reified T : Node> ancestorNode() = component.ancestor<T>()
-    inline fun <reified C : Component<S, C>, S : State> ancestorState() = ancestorNode<C>()?.state
+    inline fun <reified C : StatefulComponent<S, C>, S : State> ancestorState() = ancestorNode<C>()?.state
 }
