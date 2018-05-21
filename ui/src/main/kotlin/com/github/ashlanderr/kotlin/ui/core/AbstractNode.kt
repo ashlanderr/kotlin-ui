@@ -2,7 +2,7 @@ package com.github.ashlanderr.kotlin.ui.core
 
 import java.awt.Graphics2D
 
-abstract class AbstractNode(@ReactiveProperty override var key: Any?) : Node {
+abstract class AbstractNode(override var key: Any?) : Node {
     override var renderLeft: Double = 0.0
         protected set
 

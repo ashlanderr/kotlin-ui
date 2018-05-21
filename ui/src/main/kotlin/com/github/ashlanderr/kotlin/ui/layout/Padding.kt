@@ -14,8 +14,8 @@ data class Indent(val left: Double, val top: Double, val right: Double, val bott
 }
 
 class Padding(
-    @ReactiveProperty var padding: Indent,
-    @ReactiveNode var child: Node,
+    var padding: Indent,
+    @RxNode var child: Node,
     key: Any? = null
 ) : AbstractNode(key) {
 

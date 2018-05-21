@@ -6,11 +6,11 @@ import kotlin.math.max
 import kotlin.math.min
 
 class ConstrainedBox(
-    @ReactiveProperty var maxWidth: Double = Double.POSITIVE_INFINITY,
-    @ReactiveProperty var maxHeight: Double = Double.POSITIVE_INFINITY,
-    @ReactiveProperty var minWidth: Double = 0.0,
-    @ReactiveProperty var minHeight: Double = 0.0,
-    @ReactiveNode var child: Node,
+    var maxWidth: Double = Double.POSITIVE_INFINITY,
+    var maxHeight: Double = Double.POSITIVE_INFINITY,
+    var minWidth: Double = 0.0,
+    var minHeight: Double = 0.0,
+    @RxNode var child: Node,
     key: Any? = null
 ) : AbstractNode(key) {
 

@@ -57,11 +57,11 @@ sealed class Element {
 }
 
 class Cell(
-    @ReactiveProperty var column: Int = 0,
-    @ReactiveProperty var row: Int = 0,
-    @ReactiveProperty var columnSpan: Int = 1,
-    @ReactiveProperty var rowSpan: Int = 1,
-    @ReactiveNode var child: Node,
+    var column: Int = 0,
+    var row: Int = 0,
+    var columnSpan: Int = 1,
+    var rowSpan: Int = 1,
+    @RxNode var child: Node,
     key: Any? = null
 ) : AbstractNode(key) {
 
@@ -107,9 +107,9 @@ class Cell(
 }
 
 class Grid(
-    @ReactiveProperty var columns: List<Element>,
-    @ReactiveProperty var rows: List<Element>,
-    @ReactiveList var children: MutableList<Cell>,
+    var columns: List<Element>,
+    var rows: List<Element>,
+    @RxList var children: MutableList<Cell>,
     key: Any? = null
 ) : AbstractNode(key) {
 

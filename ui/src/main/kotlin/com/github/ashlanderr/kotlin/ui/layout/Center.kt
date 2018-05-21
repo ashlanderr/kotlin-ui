@@ -4,7 +4,7 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
 
 class Center(
-    @ReactiveNode var child: Node,
+    @RxNode var child: Node,
     key: Any? = null
 ) : AbstractNode(key) {
 

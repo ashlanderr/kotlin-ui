@@ -1,13 +1,16 @@
 package com.github.ashlanderr.kotlin.ui.material
 
-import com.github.ashlanderr.kotlin.ui.core.*
+import com.github.ashlanderr.kotlin.ui.core.EventListener
+import com.github.ashlanderr.kotlin.ui.core.Node
+import com.github.ashlanderr.kotlin.ui.core.State
+import com.github.ashlanderr.kotlin.ui.core.StatefulComponent
 import com.github.ashlanderr.kotlin.ui.text.DefaultTextStyle
 
 class FlatButton(
-    @ReactiveProperty var content: Node,
-    @ReactiveProperty var style: ButtonStyle = ButtonStyle.DEFAULT,
-    @ReactiveProperty var enabled: Boolean = true,
-    @ReactiveProperty var onClick: () -> Unit = {},
+    var content: Node,
+    var style: ButtonStyle = ButtonStyle.DEFAULT,
+    var enabled: Boolean = true,
+    var onClick: () -> Unit = {},
     key: Any? = null
 ) : StatefulComponent<FlatButtonState, FlatButton>(key) {
 

@@ -3,15 +3,14 @@ package com.github.ashlanderr.kotlin.ui.graphics
 import com.github.ashlanderr.kotlin.ui.core.AbstractNode
 import com.github.ashlanderr.kotlin.ui.core.Constraint
 import com.github.ashlanderr.kotlin.ui.core.Node
-import com.github.ashlanderr.kotlin.ui.core.ReactiveProperty
 import java.awt.Color
 import java.awt.Graphics2D
 
 class Rect(
-    @ReactiveProperty var width: Double? = null,
-    @ReactiveProperty var height: Double? = null,
-    @ReactiveProperty var fill: Color? = Color.WHITE,
-    @ReactiveProperty var stroke: Color? = Color.BLACK,
+    var width: Double? = null,
+    var height: Double? = null,
+    var fill: Color? = Color.WHITE,
+    var stroke: Color? = Color.BLACK,
     key: Any? = null
 ) : AbstractNode(key) {
 

@@ -1,7 +1,6 @@
 package com.github.ashlanderr.kotlin.ui.material
 
 import com.github.ashlanderr.kotlin.ui.core.Node
-import com.github.ashlanderr.kotlin.ui.core.ReactiveProperty
 import com.github.ashlanderr.kotlin.ui.core.State
 import com.github.ashlanderr.kotlin.ui.core.StatefulComponent
 import com.github.ashlanderr.kotlin.ui.graphics.Canvas
@@ -16,8 +15,8 @@ import kotlin.math.abs
 import kotlin.math.min
 
 class Elevation(
-    @ReactiveProperty var elevation: Double,
-    @ReactiveProperty var child: Node,
+    var elevation: Double,
+    var child: Node,
     key: Any? = null
 ) : StatefulComponent<ElevationState, Elevation>(key) {
     override fun initState(component: Elevation) = ElevationState(component)
@@ -35,7 +34,7 @@ class ElevationState(override val component: Elevation) : State() {
     )
 }
 
-class ElevationCanvas(@ReactiveProperty var elevation: Double) : Canvas() {
+class ElevationCanvas(var elevation: Double) : Canvas() {
     override fun render(g: Graphics2D, w: Double, h: Double) {
         if (elevation <= 0.0) return
 

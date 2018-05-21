@@ -1,6 +1,9 @@
 package com.github.ashlanderr.kotlin.ui.text
 
-import com.github.ashlanderr.kotlin.ui.core.*
+import com.github.ashlanderr.kotlin.ui.core.Node
+import com.github.ashlanderr.kotlin.ui.core.State
+import com.github.ashlanderr.kotlin.ui.core.StatelessComponent
+import com.github.ashlanderr.kotlin.ui.core.ancestor
 import java.awt.Color
 import java.awt.Font
 
@@ -12,8 +15,8 @@ data class TextStyle(
 )
 
 class DefaultTextStyle(
-    @ReactiveProperty var data: TextStyle,
-    @ReactiveProperty var child: Node
+    var data: TextStyle,
+    var child: Node
 ) : StatelessComponent() {
     companion object {
         private val DEFAULT_STYLE = TextStyle()

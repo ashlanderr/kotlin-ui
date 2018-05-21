@@ -5,6 +5,7 @@ import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 
 object MergeProcessor {
     fun merge(current: Node, next: Node, parent: Node? = null): Node {
@@ -100,22 +101,27 @@ object MergeProcessor {
 
     @Suppress("UNCHECKED_CAST")
     private fun getProps(clazz: KClass<out Node>): List<KMutableProperty1<Node, Any?>> {
+        val names = mutableSetOf<String>()
+        clazz.primaryConstructor
+            ?.parameters
+            ?.mapNotNullTo(names) { it.name }
+
         return clazz.memberProperties
-            .filter { it.findAnnotation<ReactiveProperty>() != null }
+            .filter { it.name in names && it.findAnnotation<RxNode>() == null && it.findAnnotation<RxList>() == null }
             .map { it as KMutableProperty1<Node, Any?> }
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun getNodes(clazz: KClass<out Node>): List<KMutableProperty1<Node, Node>> {
         return clazz.memberProperties
-            .filter { it.findAnnotation<ReactiveNode>() != null }
+            .filter { it.findAnnotation<RxNode>() != null }
             .map { it as KMutableProperty1<Node, Node> }
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun getLists(clazz: KClass<out Node>): List<KProperty1<Node, MutableList<Node>>> {
         return clazz.memberProperties
-            .filter { it.findAnnotation<ReactiveList>() != null }
+            .filter { it.findAnnotation<RxList>() != null }
             .map { it as KProperty1<Node, MutableList<Node>> }
     }
 }

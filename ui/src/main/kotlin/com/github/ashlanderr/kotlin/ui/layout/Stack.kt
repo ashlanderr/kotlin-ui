@@ -5,7 +5,7 @@ import java.awt.Graphics2D
 import kotlin.math.max
 
 class Stack(
-    @ReactiveList override var children: MutableList<Node>,
+    @RxList override var children: MutableList<Node>,
     key: Any? = null
 ) : AbstractNode(key), Parent {
 

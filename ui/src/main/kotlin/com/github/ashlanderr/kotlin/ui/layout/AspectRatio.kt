@@ -4,8 +4,8 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
 
 class AspectRatio(
-    @ReactiveProperty var ratio: Double,
-    @ReactiveNode var child: Node,
+    var ratio: Double,
+    @RxNode var child: Node,
     key: Any? = null
 ) : AbstractNode(key) {
 

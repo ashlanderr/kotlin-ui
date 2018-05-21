@@ -5,8 +5,8 @@ import java.awt.Graphics2D
 import kotlin.math.max
 
 class Column(
-    @ReactiveProperty var align: HorizontalAlign = HorizontalAlign.LEFT,
-    @ReactiveList override var children: MutableList<Node>,
+    var align: HorizontalAlign = HorizontalAlign.LEFT,
+    @RxList override var children: MutableList<Node>,
     key: Any? = null
 ) : AbstractNode(key), Parent {
 

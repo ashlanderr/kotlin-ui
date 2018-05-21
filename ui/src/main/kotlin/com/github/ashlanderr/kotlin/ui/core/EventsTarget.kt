@@ -23,10 +23,10 @@ interface EventsTarget {
 }
 
 class EventListener(
-    @ReactiveProperty var onMouseDown: (MouseEvent) -> Boolean = { true },
-    @ReactiveProperty var onMouseUp: (MouseEvent) -> Boolean = { true },
-    @ReactiveProperty var onMouseClick: (MouseEvent) -> Boolean = { true },
-    @ReactiveNode var child: Node,
+    var onMouseDown: (MouseEvent) -> Boolean = { true },
+    var onMouseUp: (MouseEvent) -> Boolean = { true },
+    var onMouseClick: (MouseEvent) -> Boolean = { true },
+    @RxNode var child: Node,
     key: Any? = null
 ) : EventsTarget, AbstractNode(key) {
 

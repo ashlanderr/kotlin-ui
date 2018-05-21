@@ -1,6 +1,9 @@
 package com.github.ashlanderr.kotlin.ui.material
 
-import com.github.ashlanderr.kotlin.ui.core.*
+import com.github.ashlanderr.kotlin.ui.core.Node
+import com.github.ashlanderr.kotlin.ui.core.State
+import com.github.ashlanderr.kotlin.ui.core.StatelessComponent
+import com.github.ashlanderr.kotlin.ui.core.ancestor
 import com.github.ashlanderr.kotlin.ui.graphics.Background
 import com.github.ashlanderr.kotlin.ui.text.TextStyle
 import java.awt.Color
@@ -33,8 +36,8 @@ data class ThemeData(
 )
 
 class Theme(
-    @ReactiveProperty var data: ThemeData,
-    @ReactiveProperty var child: Node
+    var data: ThemeData,
+    var child: Node
 ) : StatelessComponent() {
     companion object {
         private val DEFAULT_THEME = ThemeData()

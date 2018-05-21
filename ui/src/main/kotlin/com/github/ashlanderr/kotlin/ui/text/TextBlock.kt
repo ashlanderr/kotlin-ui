@@ -3,16 +3,15 @@ package com.github.ashlanderr.kotlin.ui.text
 import com.github.ashlanderr.kotlin.ui.core.AbstractNode
 import com.github.ashlanderr.kotlin.ui.core.Constraint
 import com.github.ashlanderr.kotlin.ui.core.Node
-import com.github.ashlanderr.kotlin.ui.core.ReactiveProperty
 import com.github.ashlanderr.kotlin.ui.layout.HorizontalAlign
 import java.awt.Font
 import java.awt.Graphics2D
 
 class TextBlock(
-    @ReactiveProperty var text: String,
-    @ReactiveProperty var wrapping: TextWrapping = TextWrapping.NO_WRAP,
-    @ReactiveProperty var align: HorizontalAlign = HorizontalAlign.LEFT,
-    @ReactiveProperty var style: TextStyle? = null,
+    var text: String,
+    var wrapping: TextWrapping = TextWrapping.NO_WRAP,
+    var align: HorizontalAlign = HorizontalAlign.LEFT,
+    var style: TextStyle? = null,
     key: Any? = null
 ) : AbstractNode(key) {
 

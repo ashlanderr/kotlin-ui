@@ -5,8 +5,8 @@ import java.awt.Color
 import java.awt.Graphics2D
 
 class Background(
-    @ReactiveNode var child: Node,
-    @ReactiveProperty var color: Color,
+    @RxNode var child: Node,
+    var color: Color,
     key: Any? = null
 ) : AbstractNode(key) {
 

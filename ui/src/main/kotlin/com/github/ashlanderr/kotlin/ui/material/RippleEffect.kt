@@ -11,9 +11,9 @@ import java.awt.Graphics2D
 import kotlin.math.sqrt
 
 class RippleEffect(
-    @ReactiveProperty var child: Node,
-    @ReactiveProperty var color: Color,
-    @ReactiveProperty var enabled: Boolean = true,
+    var child: Node,
+    var color: Color,
+    var enabled: Boolean = true,
     key: Any? = null
 ) : StatefulComponent<RippleEffectState, RippleEffect>(key) {
 
@@ -62,10 +62,10 @@ class RippleEffectState(override val component: RippleEffect) : State() {
 
 class Ripple(
     key: Any? = null,
-    @ReactiveProperty var color: Color,
-    @ReactiveProperty var point: Point,
-    @ReactiveProperty var released: Boolean,
-    @ReactiveProperty var onCompleted: () -> Unit
+    var color: Color,
+    var point: Point,
+    var released: Boolean,
+    var onCompleted: () -> Unit
 ) : StatefulComponent<RippleState, Ripple>(key) {
     override fun initState(component: Ripple) = RippleState(component)
 }
@@ -94,10 +94,10 @@ class RippleState(override val component: Ripple) : State() {
 }
 
 class RippleCanvas(
-    @ReactiveProperty var color: Color,
-    @ReactiveProperty var point: Point,
-    @ReactiveProperty var radiusTime: Double,
-    @ReactiveProperty var alphaTime: Double
+    var color: Color,
+    var point: Point,
+    var radiusTime: Double,
+    var alphaTime: Double
 ) : Canvas() {
     override fun render(g: Graphics2D, w: Double, h: Double) {
         val radius = radiusTime * sqrt(w * w + h * h)
