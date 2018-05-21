@@ -23,7 +23,7 @@ class CounterState(override val component: Counter) : State() {
                 text = "Button pressed $count times"
             ),
             Padding(
-                padding = Indent.symetric(0.0, 8.0),
+                padding = Indent.symmetric(0.0, 8.0),
                 child = FlatButton(
                     style = ButtonStyle.ACCENT,
                     onClick = {
@@ -32,7 +32,7 @@ class CounterState(override val component: Counter) : State() {
                         }
                     },
                     content = Padding(
-                        padding = Indent.symetric(8.0, 8.0),
+                        padding = Indent.symmetric(8.0, 8.0),
                         child = TextBlock(
                             align = HorizontalAlign.CENTER,
                             text = "PUSH ME"

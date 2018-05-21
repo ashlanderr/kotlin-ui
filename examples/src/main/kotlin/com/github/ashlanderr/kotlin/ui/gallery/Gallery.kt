@@ -60,12 +60,12 @@ class Gallery : StatelessComponent() {
     )
 
     private fun galleryFlatButton(style: ButtonStyle, title: String, enabled: Boolean = true) = Padding(
-        padding = Indent.symetric(0.0, 0.0),
+        padding = Indent.symmetric(0.0, 0.0),
         child = FlatButton(
             enabled = enabled,
             style = style,
             content = Padding(
-                padding = Indent.symetric(16.0, 8.0),
+                padding = Indent.symmetric(16.0, 8.0),
                 child = Center(
                     child = TextBlock(
                         text = title

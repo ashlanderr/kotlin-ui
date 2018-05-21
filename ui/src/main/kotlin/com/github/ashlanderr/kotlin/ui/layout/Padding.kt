@@ -7,7 +7,7 @@ data class Indent(val left: Double, val top: Double, val right: Double, val bott
     companion object {
         val ZERO = all(0.0)
 
-        fun symetric(horizontal: Double, vertical: Double) = Indent(horizontal, vertical, horizontal, vertical)
+        fun symmetric(horizontal: Double, vertical: Double) = Indent(horizontal, vertical, horizontal, vertical)
         fun all(all: Double) = Indent(all, all, all, all)
     }
 
