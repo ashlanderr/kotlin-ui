@@ -4,124 +4,114 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
 import kotlin.math.max
 
-class Grid : AbstractNode() {
-    sealed class Element {
-        open var realSize: Double = 0.0
-            protected set
+sealed class Element {
+    open var realSize: Double = 0.0
+        protected set
 
-        var offset: Double = 0.0
-        abstract val weight: Double
+    var offset: Double = 0.0
+    abstract val weight: Double
 
-        abstract fun reset()
-        abstract fun expand(size: Double)
-        abstract fun flex(size: Double)
+    abstract fun reset()
+    abstract fun expand(size: Double)
+    abstract fun flex(size: Double)
 
-        class Fixed(val value: Double) : Element() {
-            override val weight: Double = 0.0
+    class Fixed(val value: Double) : Element() {
+        override val weight: Double = 0.0
 
-            override fun reset() {
-                offset = 0.0
-                realSize = value
-            }
-
-            override fun expand(size: Double) {}
-            override fun flex(size: Double) {}
+        override fun reset() {
+            offset = 0.0
+            realSize = value
         }
 
-        class Auto : Element() {
-            override val weight: Double = 0.0
-
-            override fun reset() {
-                offset = 0.0
-                realSize = 0.0
-            }
-
-            override fun expand(size: Double) {
-                realSize = max(realSize, size)
-            }
-
-            override fun flex(size: Double) {}
-        }
-
-        class Flex(override val weight: Double) : Element() {
-            override fun reset() {
-                offset = 0.0
-                realSize = 0.0
-            }
-
-            override fun expand(size: Double) {}
-
-            override fun flex(size: Double) {
-                realSize = size
-            }
-        }
+        override fun expand(size: Double) {}
+        override fun flex(size: Double) {}
     }
 
-    class Cell : AbstractNode() {
-        @ReactiveProperty
-        var column: Int = 0
+    class Auto : Element() {
+        override val weight: Double = 0.0
 
-        @ReactiveProperty
-        var columnSpan: Int = 1
-
-        @ReactiveProperty
-        var row: Int = 0
-
-        @ReactiveProperty
-        var rowSpan: Int = 1
-
-        @ReactiveNode
-        var child: Node = EmptyNode
-
-        private val grid: Grid get() = parent as Grid
-
-        override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
-            child.measure(g, w, h)
-
-            grid.columns[column + columnSpan - 1].expand(child.renderWidth)
-            grid.rows[row + rowSpan - 1].expand(child.renderHeight)
+        override fun reset() {
+            offset = 0.0
+            realSize = 0.0
         }
 
-        fun computeSize(g: Graphics2D) {
-            renderWidth = grid.columns.sumSize(column, columnSpan)
-            renderHeight = grid.rows.sumSize(row,  rowSpan)
-
-            val cw = Constraint.Max(renderWidth)
-            val ch = Constraint.Max(renderHeight)
-            child.measure(g, cw, ch)
+        override fun expand(size: Double) {
+            realSize = max(realSize, size)
         }
 
-        override fun arrange(left: Double, top: Double) {
-            renderLeft = grid.columns[column].offset + left
-            renderTop = grid.rows[row].offset + top
-            child.arrange(renderLeft, renderTop)
-        }
-
-        override fun render(g: Graphics2D) {
-            val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
-            child.render(g)
-            g.popClip(clip)
-        }
-
-        override fun mount(parent: Node?) {
-            this.parent = parent
-        }
-
-        override fun unmount() {
-            this.parent = null
-        }
-
-        override fun childAtPoint(point: Point) = child.takeIf { it.containsPoint(point) }
+        override fun flex(size: Double) {}
     }
 
-    @ReactiveProperty
-    var columns: MutableList<Element> = ArrayList()
+    class Flex(override val weight: Double) : Element() {
+        override fun reset() {
+            offset = 0.0
+            realSize = 0.0
+        }
 
-    @ReactiveProperty
-    var rows: MutableList<Element> = ArrayList()
+        override fun expand(size: Double) {}
 
-    @ReactiveList
-    var children: MutableList<Cell> = ArrayList()
+        override fun flex(size: Double) {
+            realSize = size
+        }
+    }
+}
+
+class Cell(
+    @ReactiveProperty var column: Int = 0,
+    @ReactiveProperty var row: Int = 0,
+    @ReactiveProperty var columnSpan: Int = 1,
+    @ReactiveProperty var rowSpan: Int = 1,
+    @ReactiveNode var child: Node,
+    key: Any? = null
+) : AbstractNode(key) {
+
+    private val grid: Grid get() = parent as Grid
+
+    override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
+        child.measure(g, w, h)
+
+        grid.columns[column + columnSpan - 1].expand(child.renderWidth)
+        grid.rows[row + rowSpan - 1].expand(child.renderHeight)
+    }
+
+    fun computeSize(g: Graphics2D) {
+        renderWidth = grid.columns.sumSize(column, columnSpan)
+        renderHeight = grid.rows.sumSize(row, rowSpan)
+
+        val cw = Constraint.Max(renderWidth)
+        val ch = Constraint.Max(renderHeight)
+        child.measure(g, cw, ch)
+    }
+
+    override fun arrange(left: Double, top: Double) {
+        renderLeft = grid.columns[column].offset + left
+        renderTop = grid.rows[row].offset + top
+        child.arrange(renderLeft, renderTop)
+    }
+
+    override fun render(g: Graphics2D) {
+        val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
+        child.render(g)
+        g.popClip(clip)
+    }
+
+    override fun mount(parent: Node?) {
+        this.parent = parent
+    }
+
+    override fun unmount() {
+        this.parent = null
+    }
+
+    override fun childAtPoint(point: Point) = child.takeIf { it.containsPoint(point) }
+}
+
+class Grid(
+    @ReactiveProperty var columns: List<Element>,
+    @ReactiveProperty var rows: List<Element>,
+    @ReactiveList var children: MutableList<Cell>,
+    key: Any? = null
+) : AbstractNode(key) {
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         columns.forEach(Element::reset)
@@ -179,18 +169,30 @@ class Grid : AbstractNode() {
     }
 }
 
-private fun List<Grid.Element>.sumSize(fromIndex: Int = 0, count: Int = this.size) = this
+private fun List<Element>.sumSize(fromIndex: Int = 0, count: Int = this.size) = this
     .subList(fromIndex, fromIndex + count)
     .sumByDouble { it.realSize }
 
-private fun List<Grid.Element>.sumWeight(fromIndex: Int = 0, count: Int = this.size) = this
+private fun List<Element>.sumWeight(fromIndex: Int = 0, count: Int = this.size) = this
     .subList(fromIndex, fromIndex + count)
     .sumByDouble { it.weight }
 
-fun grid(builder: Builder<Grid>) = build(builder)
-fun Grid.columns(builder: Builder<MutableList<Grid.Element>>) = this.columns.let(builder)
-fun Grid.rows(builder: Builder<MutableList<Grid.Element>>) = this.rows.let(builder)
-fun MutableList<Grid.Element>.fixed(value: Double) = this.add(Grid.Element.Fixed(value))
-fun MutableList<Grid.Element>.auto() = this.add(Grid.Element.Auto())
-fun MutableList<Grid.Element>.flex(weight: Double) = this.add(Grid.Element.Flex(weight))
-fun Grid.cell(builder: Builder<Grid.Cell>) = this.children.add(build(builder))
+class ElementsScope(private val items: MutableList<Element>) {
+    fun auto() {
+        items.add(Element.Auto())
+    }
+
+    fun fixed(value: Double) {
+        items.add(Element.Fixed(value))
+    }
+
+    fun flex(weight: Double) {
+        items.add(Element.Flex(weight))
+    }
+}
+
+inline fun elements(builder: ElementsScope.() -> Unit): List<Element> {
+    val items = mutableListOf<Element>()
+    ElementsScope(items).apply(builder)
+    return items
+}

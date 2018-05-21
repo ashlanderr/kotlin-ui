@@ -1,14 +1,16 @@
 package com.github.ashlanderr.kotlin.ui.layout
 
-import com.github.ashlanderr.kotlin.ui.core.*
+import com.github.ashlanderr.kotlin.ui.core.AbstractNode
+import com.github.ashlanderr.kotlin.ui.core.Constraint
+import com.github.ashlanderr.kotlin.ui.core.Node
+import com.github.ashlanderr.kotlin.ui.core.ReactiveProperty
 import java.awt.Graphics2D
 
-class SizedBox : AbstractNode() {
-    @ReactiveProperty
-    var width: Double = 0.0
-
-    @ReactiveProperty
-    var height: Double = 0.0
+class SizedBox(
+    @ReactiveProperty var width: Double,
+    @ReactiveProperty var height: Double,
+    key: Any? = null
+) : AbstractNode(key) {
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         renderWidth = width
@@ -30,5 +32,3 @@ class SizedBox : AbstractNode() {
         this.parent = null
     }
 }
-
-fun sizedBox(builder: Builder<SizedBox>) = build(builder)

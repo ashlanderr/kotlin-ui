@@ -3,12 +3,11 @@ package com.github.ashlanderr.kotlin.ui.layout
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
 
-class AspectRatio : AbstractNode() {
-    @ReactiveProperty
-    var ratio = 1.0
-
-    @ReactiveNode
-    var child: Node = EmptyNode
+class AspectRatio(
+    @ReactiveProperty var ratio: Double,
+    @ReactiveNode var child: Node,
+    key: Any? = null
+) : AbstractNode(key) {
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         val maxWidth = w.compute(0.0, w.size)
@@ -51,5 +50,3 @@ class AspectRatio : AbstractNode() {
 
     override fun childAtPoint(point: Point) = child.takeIf { child.containsPoint(point) }
 }
-
-fun aspectRatio(builder: Builder<AspectRatio>) = build(builder)

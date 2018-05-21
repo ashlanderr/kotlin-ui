@@ -5,21 +5,14 @@ import java.awt.Graphics2D
 import kotlin.math.max
 import kotlin.math.min
 
-class ConstrainedBox : AbstractNode() {
-    @ReactiveProperty
-    var maxWidth: Double = Double.POSITIVE_INFINITY
-
-    @ReactiveProperty
-    var maxHeight: Double = Double.POSITIVE_INFINITY
-
-    @ReactiveProperty
-    var minWidth: Double = 0.0
-
-    @ReactiveProperty
-    var minHeight: Double = 0.0
-
-    @ReactiveNode
-    var child: Node = EmptyNode
+class ConstrainedBox(
+    @ReactiveProperty var maxWidth: Double = Double.POSITIVE_INFINITY,
+    @ReactiveProperty var maxHeight: Double = Double.POSITIVE_INFINITY,
+    @ReactiveProperty var minWidth: Double = 0.0,
+    @ReactiveProperty var minHeight: Double = 0.0,
+    @ReactiveNode var child: Node,
+    key: Any? = null
+) : AbstractNode(key) {
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         renderWidth = max(minWidth, min(maxWidth, w.size))
@@ -49,5 +42,3 @@ class ConstrainedBox : AbstractNode() {
 
     override fun childAtPoint(point: Point) = child.takeIf { child.containsPoint(point) }
 }
-
-fun constrainedBox(builder: Builder<ConstrainedBox>) = build(builder)

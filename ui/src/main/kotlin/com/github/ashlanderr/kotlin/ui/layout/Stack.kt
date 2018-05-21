@@ -4,9 +4,10 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
 import kotlin.math.max
 
-class Stack : AbstractNode(), Parent {
-    @ReactiveList
-    override var children: MutableList<Node> = ArrayList()
+class Stack(
+    @ReactiveList override var children: MutableList<Node>,
+    key: Any? = null
+) : AbstractNode(key), Parent {
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         var cw: Constraint = Constraint.Min(w.size)
@@ -59,5 +60,3 @@ class Stack : AbstractNode(), Parent {
 
     override fun childAtPoint(point: Point) = children.asReversed().childAtPoint(point)
 }
-
-fun stack(builder: Builder<Stack>) = build(builder)

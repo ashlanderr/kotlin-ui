@@ -1,26 +1,24 @@
 package com.github.ashlanderr.kotlin.ui.text
 
-import com.github.ashlanderr.kotlin.ui.core.*
+import com.github.ashlanderr.kotlin.ui.core.AbstractNode
+import com.github.ashlanderr.kotlin.ui.core.Constraint
+import com.github.ashlanderr.kotlin.ui.core.Node
+import com.github.ashlanderr.kotlin.ui.core.ReactiveProperty
 import com.github.ashlanderr.kotlin.ui.layout.HorizontalAlign
 import java.awt.Font
 import java.awt.Graphics2D
 
-class TextBlock : AbstractNode() {
+class TextBlock(
+    @ReactiveProperty var text: String,
+    @ReactiveProperty var wrapping: TextWrapping = TextWrapping.NO_WRAP,
+    @ReactiveProperty var align: HorizontalAlign = HorizontalAlign.LEFT,
+    @ReactiveProperty var style: TextStyle? = null,
+    key: Any? = null
+) : AbstractNode(key) {
+
     private data class Line(var left: Double, var width: Double, val text: String)
 
     private var lines: List<Line> = emptyList()
-
-    @ReactiveProperty
-    var text: String = ""
-
-    @ReactiveProperty
-    var wrapping: TextWrapping = TextWrapping.BREAK_WORD
-
-    @ReactiveProperty
-    var align: HorizontalAlign = HorizontalAlign.LEFT
-
-    @ReactiveProperty
-    var style: TextStyle? = null
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         applyStyle(g)
@@ -71,5 +69,3 @@ class TextBlock : AbstractNode() {
         g.color = style.color
     }
 }
-
-fun textBlock(builder: Builder<TextBlock>) = build(builder)

@@ -3,9 +3,10 @@ package com.github.ashlanderr.kotlin.ui.layout
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
 
-class Center : AbstractNode() {
-    @ReactiveNode
-    var child: Node = EmptyNode
+class Center(
+    @ReactiveNode var child: Node,
+    key: Any? = null
+) : AbstractNode(key) {
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         child.measure(g, Constraint.Min(w.size), Constraint.Min(h.size))
@@ -40,5 +41,3 @@ class Center : AbstractNode() {
 
     override fun childAtPoint(point: Point) = child.takeIf { child.containsPoint(point) }
 }
-
-fun center(builder: Builder<Center>) = build(builder)

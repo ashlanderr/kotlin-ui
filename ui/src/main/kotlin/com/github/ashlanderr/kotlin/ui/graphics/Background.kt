@@ -4,12 +4,11 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Color
 import java.awt.Graphics2D
 
-class Background : AbstractNode() {
-    @ReactiveNode
-    var child: Node = EmptyNode
-
-    @ReactiveProperty
-    var color: Color = Color.WHITE
+class Background(
+    @ReactiveNode var child: Node,
+    @ReactiveProperty var color: Color,
+    key: Any? = null
+) : AbstractNode(key) {
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         child.measure(g, w, h)
@@ -39,5 +38,3 @@ class Background : AbstractNode() {
 
     override fun childAtPoint(point: Point) = child.takeIf { it.containsPoint(point) }
 }
-
-fun background(builder: Builder<Background>) = build(builder)

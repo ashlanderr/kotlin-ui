@@ -2,7 +2,7 @@ package com.github.ashlanderr.kotlin.ui.core
 
 import java.awt.Graphics2D
 
-abstract class AbstractNode : Node {
+abstract class AbstractNode(@ReactiveProperty override var key: Any?) : Node {
     override var renderLeft: Double = 0.0
         protected set
 
@@ -17,9 +17,6 @@ abstract class AbstractNode : Node {
 
     override var parent: Node? = null
         protected set
-
-    @ReactiveProperty
-    override var key: Any? = null
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {}
     override fun arrange(left: Double, top: Double) {}

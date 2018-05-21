@@ -13,12 +13,11 @@ data class Indent(val left: Double, val top: Double, val right: Double, val bott
 
 }
 
-class Padding : AbstractNode() {
-    @ReactiveProperty
-    var padding: Indent = Indent.ZERO
-
-    @ReactiveNode
-    var child: Node = EmptyNode
+class Padding(
+    @ReactiveProperty var padding: Indent,
+    @ReactiveNode var child: Node,
+    key: Any? = null
+) : AbstractNode(key) {
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         val horizontalPadding = padding.left + padding.right
@@ -52,5 +51,3 @@ class Padding : AbstractNode() {
 
     override fun childAtPoint(point: Point) = child.takeIf { it.containsPoint(point) }
 }
-
-fun padding(builder: Builder<Padding>) = build(builder)

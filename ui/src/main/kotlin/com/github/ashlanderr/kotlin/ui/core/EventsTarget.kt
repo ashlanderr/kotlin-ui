@@ -16,24 +16,19 @@ abstract class AbstractEvent(val target: Node) {
 
 class MouseEvent(val point: Point, target: Node) : AbstractEvent(target)
 
-interface EventListener {
+interface EventsTarget {
     fun mouseDown(event: MouseEvent): Boolean
     fun mouseUp(event: MouseEvent): Boolean
     fun mouseClick(event: MouseEvent): Boolean
 }
 
-class EventListenerNode : EventListener, AbstractNode() {
-    @ReactiveProperty
-    var onMouseDown: (MouseEvent) -> Boolean = { true }
-
-    @ReactiveProperty
-    var onMouseUp: (MouseEvent) -> Boolean = { true }
-
-    @ReactiveProperty
-    var onMouseClick: (MouseEvent) -> Boolean = { true }
-
-    @ReactiveNode
-    var child: Node = EmptyNode
+class EventListener(
+    @ReactiveProperty var onMouseDown: (MouseEvent) -> Boolean = { true },
+    @ReactiveProperty var onMouseUp: (MouseEvent) -> Boolean = { true },
+    @ReactiveProperty var onMouseClick: (MouseEvent) -> Boolean = { true },
+    @ReactiveNode var child: Node,
+    key: Any? = null
+) : EventsTarget, AbstractNode(key) {
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         child.measure(g, w, h)
@@ -67,5 +62,3 @@ class EventListenerNode : EventListener, AbstractNode() {
     override fun mouseUp(event: MouseEvent) = onMouseUp(event)
     override fun mouseClick(event: MouseEvent) = onMouseClick(event)
 }
-
-fun eventListener(builder: Builder<EventListenerNode>) = build(builder)

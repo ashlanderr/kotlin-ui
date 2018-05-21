@@ -4,12 +4,11 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
 import kotlin.math.max
 
-class Column : AbstractNode(), Parent {
-    @ReactiveList
-    override val children: MutableList<Node> = ArrayList()
-
-    @ReactiveProperty
-    var align: HorizontalAlign = HorizontalAlign.LEFT
+class Column(
+    @ReactiveProperty var align: HorizontalAlign = HorizontalAlign.LEFT,
+    @ReactiveList override var children: MutableList<Node>,
+    key: Any? = null
+) : AbstractNode(key), Parent {
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         renderWidth = 0.0
@@ -63,5 +62,3 @@ class Column : AbstractNode(), Parent {
 
     override fun childAtPoint(point: Point) = children.childAtPoint(point)
 }
-
-fun column(builder: Builder<Column>) = build(builder)

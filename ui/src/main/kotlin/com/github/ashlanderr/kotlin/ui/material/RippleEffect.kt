@@ -5,20 +5,17 @@ import com.github.ashlanderr.kotlin.ui.graphics.AnimationController
 import com.github.ashlanderr.kotlin.ui.graphics.AnimationManager
 import com.github.ashlanderr.kotlin.ui.graphics.AnimationMode
 import com.github.ashlanderr.kotlin.ui.graphics.Canvas
-import com.github.ashlanderr.kotlin.ui.layout.stack
+import com.github.ashlanderr.kotlin.ui.layout.Stack
 import java.awt.Color
 import java.awt.Graphics2D
 import kotlin.math.sqrt
 
-class RippleEffect : StatefulComponent<RippleEffectState, RippleEffect>() {
-    @ReactiveProperty
-    var child: Node = EmptyNode
-
-    @ReactiveProperty
-    var color: Color = Color.BLACK
-
-    @ReactiveProperty
-    var enabled: Boolean = true
+class RippleEffect(
+    @ReactiveProperty var child: Node,
+    @ReactiveProperty var color: Color,
+    @ReactiveProperty var enabled: Boolean = true,
+    key: Any? = null
+) : StatefulComponent<RippleEffectState, RippleEffect>(key) {
 
     override fun initState(component: RippleEffect) = RippleEffectState(component)
 }
@@ -32,39 +29,39 @@ class RippleEffectState(override val component: RippleEffect) : State() {
     override fun render(): Node {
         animations.update()
 
-        return eventListener {
+        return EventListener(
             onMouseDown = {
                 update {
                     if (component.enabled) ripples.add(RippleKey(it.point, false))
                 }
                 true
-            }
+            },
             onMouseUp = {
                 update {
                     ripples.forEach { it.released = true }
                 }
                 true
-            }
-            child = stack {
-                +component.child
-                ripples.forEach {
-                    +Ripple(
-                        key = it,
-                        color = component.color,
-                        point = it.point,
-                        released = it.released,
-                        onCompleted = { ripples.remove(it) }
-                    )
-                }
-            }
-        }
+            },
+            child = Stack(
+                children = children(
+                    listOf(component.child),
+                    ripples.map {
+                        Ripple(
+                            key = it,
+                            color = component.color,
+                            point = it.point,
+                            released = it.released,
+                            onCompleted = { ripples.remove(it) }
+                        )
+                    }
+                )
+            )
+        )
     }
 }
 
-fun rippleEffect(builder: Builder<RippleEffect>) = build(builder)
-
 class Ripple(
-    key: Any?,
+    key: Any? = null,
     @ReactiveProperty var color: Color,
     @ReactiveProperty var point: Point,
     @ReactiveProperty var released: Boolean,

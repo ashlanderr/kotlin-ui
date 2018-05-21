@@ -1,3 +1,3 @@
 package com.github.ashlanderr.kotlin.ui.core
 
-object EmptyNode : AbstractNode()
+object EmptyNode : AbstractNode(null)

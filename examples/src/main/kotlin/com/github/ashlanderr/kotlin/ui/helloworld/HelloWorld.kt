@@ -1,16 +1,16 @@
 package com.github.ashlanderr.kotlin.ui.helloworld
 
 import com.github.ashlanderr.kotlin.ui.core.Application
-import com.github.ashlanderr.kotlin.ui.layout.center
-import com.github.ashlanderr.kotlin.ui.text.textBlock
+import com.github.ashlanderr.kotlin.ui.layout.Center
+import com.github.ashlanderr.kotlin.ui.text.TextBlock
 import javax.swing.JFrame
 
 class HelloWorldApp : Application() {
-    override fun render() = center {
-        child = textBlock {
+    override fun render() = Center(
+        child = TextBlock(
             text = "Hello, World!"
-        }
-    }
+        )
+    )
 }
 
 fun main(args: Array<String>) {

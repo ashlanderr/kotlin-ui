@@ -4,8 +4,9 @@ import com.github.ashlanderr.kotlin.ui.core.Application
 import com.github.ashlanderr.kotlin.ui.core.State
 import com.github.ashlanderr.kotlin.ui.core.StatefulComponent
 import com.github.ashlanderr.kotlin.ui.layout.*
-import com.github.ashlanderr.kotlin.ui.material.flatButton
-import com.github.ashlanderr.kotlin.ui.text.textBlock
+import com.github.ashlanderr.kotlin.ui.material.ButtonStyle
+import com.github.ashlanderr.kotlin.ui.material.FlatButton
+import com.github.ashlanderr.kotlin.ui.text.TextBlock
 import javax.swing.JFrame
 
 class Counter : StatefulComponent<CounterState, Counter>() {
@@ -15,37 +16,36 @@ class Counter : StatefulComponent<CounterState, Counter>() {
 class CounterState(override val component: Counter) : State() {
     private var count = 0
 
-    override fun render() = column {
-        align = HorizontalAlign.STRETCH
-        +padding {
-            child = textBlock {
+    override fun render() = Column(
+        align = HorizontalAlign.STRETCH,
+        children = mutableListOf(
+            TextBlock(
                 text = "Button pressed $count times"
-            }
-        }
-        +padding {
-            padding = Indent.symetric(0.0, 8.0)
-            child = flatButton {
-                onClick = {
-                    update {
-                        count += 1
-                    }
-                }
-                content = padding {
-                    padding = Indent.symetric(8.0, 8.0)
-                    child = textBlock {
-                        align = HorizontalAlign.CENTER
-                        text = "PUSH ME"
-                    }
-                }
-            }
-        }
-    }
+            ),
+            Padding(
+                padding = Indent.symetric(0.0, 8.0),
+                child = FlatButton(
+                    style = ButtonStyle.ACCENT,
+                    onClick = {
+                        update {
+                            count += 1
+                        }
+                    },
+                    content = Padding(
+                        padding = Indent.symetric(8.0, 8.0),
+                        child = TextBlock(
+                            align = HorizontalAlign.CENTER,
+                            text = "PUSH ME"
+                        )
+                    )
+                )
+            )
+        )
+    )
 }
 
 class CounterApp : Application() {
-    override fun render() = center {
-        child = Counter()
-    }
+    override fun render() = Center(Counter())
 }
 
 fun main(args: Array<String>) {

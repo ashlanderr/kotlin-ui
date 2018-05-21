@@ -6,8 +6,8 @@ import com.github.ashlanderr.kotlin.ui.core.State
 import com.github.ashlanderr.kotlin.ui.core.StatefulComponent
 import com.github.ashlanderr.kotlin.ui.graphics.Canvas
 import com.github.ashlanderr.kotlin.ui.layout.Indent
-import com.github.ashlanderr.kotlin.ui.layout.padding
-import com.github.ashlanderr.kotlin.ui.layout.stack
+import com.github.ashlanderr.kotlin.ui.layout.Padding
+import com.github.ashlanderr.kotlin.ui.layout.Stack
 import java.awt.Color
 import java.awt.GradientPaint
 import java.awt.Graphics2D
@@ -17,19 +17,22 @@ import kotlin.math.min
 
 class Elevation(
     @ReactiveProperty var elevation: Double,
-    @ReactiveProperty var child: Node
-) : StatefulComponent<ElevationState, Elevation>() {
+    @ReactiveProperty var child: Node,
+    key: Any? = null
+) : StatefulComponent<ElevationState, Elevation>(key) {
     override fun initState(component: Elevation) = ElevationState(component)
 }
 
 class ElevationState(override val component: Elevation) : State() {
-    override fun render() = stack {
-        +ElevationCanvas(component.elevation)
-        +padding {
-            padding = Indent.all(component.elevation)
-            child = component.child
-        }
-    }
+    override fun render() = Stack(
+        children = mutableListOf(
+            ElevationCanvas(component.elevation),
+            Padding(
+                padding = Indent.all(component.elevation),
+                child = component.child
+            )
+        )
+    )
 }
 
 class ElevationCanvas(@ReactiveProperty var elevation: Double) : Canvas() {

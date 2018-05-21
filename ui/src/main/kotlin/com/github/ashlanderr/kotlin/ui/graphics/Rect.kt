@@ -1,21 +1,19 @@
 package com.github.ashlanderr.kotlin.ui.graphics
 
-import com.github.ashlanderr.kotlin.ui.core.*
+import com.github.ashlanderr.kotlin.ui.core.AbstractNode
+import com.github.ashlanderr.kotlin.ui.core.Constraint
+import com.github.ashlanderr.kotlin.ui.core.Node
+import com.github.ashlanderr.kotlin.ui.core.ReactiveProperty
 import java.awt.Color
 import java.awt.Graphics2D
 
-class Rect : AbstractNode() {
-    @ReactiveProperty
-    var width: Double? = null
-
-    @ReactiveProperty
-    var height: Double? = null
-
-    @ReactiveProperty
-    var fill: Color? = Color.WHITE
-
-    @ReactiveProperty
-    var stroke: Color? = Color.BLACK
+class Rect(
+    @ReactiveProperty var width: Double? = null,
+    @ReactiveProperty var height: Double? = null,
+    @ReactiveProperty var fill: Color? = Color.WHITE,
+    @ReactiveProperty var stroke: Color? = Color.BLACK,
+    key: Any? = null
+) : AbstractNode(key) {
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {
         renderWidth = width ?: w.compute(0.0, w.size)
@@ -46,5 +44,3 @@ class Rect : AbstractNode() {
         this.parent = null
     }
 }
-
-fun rect(builder: Builder<Rect>) = build(builder)

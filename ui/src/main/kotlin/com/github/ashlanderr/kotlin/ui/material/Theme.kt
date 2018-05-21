@@ -1,7 +1,7 @@
 package com.github.ashlanderr.kotlin.ui.material
 
 import com.github.ashlanderr.kotlin.ui.core.*
-import com.github.ashlanderr.kotlin.ui.graphics.background
+import com.github.ashlanderr.kotlin.ui.graphics.Background
 import com.github.ashlanderr.kotlin.ui.text.TextStyle
 import java.awt.Color
 import java.awt.Font
@@ -42,10 +42,8 @@ class Theme(
         fun of(state: State) = of(state.component)
     }
 
-    override fun render(): Node {
-        return background {
-            color = data.canvasColor
-            child = this@Theme.child
-        }
-    }
+    override fun render() = Background(
+        color = data.canvasColor,
+        child = child
+    )
 }
