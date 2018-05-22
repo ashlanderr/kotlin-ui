@@ -50,25 +50,16 @@ class RippleEffectState(override val component: RippleEffect) : State() {
         )
     }
 
-    private fun onMouseDown(event: MouseEvent): Boolean {
-        update {
-            if (component.enabled) ripples.add(RippleKey(event.point, false))
-        }
-        return true
+    private fun onMouseDown(event: MouseEvent) = update {
+        if (component.enabled) ripples.add(RippleKey(event.point, false))
     }
 
-    private fun onMouseUp(event: MouseEvent): Boolean {
-        update {
-            ripples.forEach { it.released = true }
-        }
-        return true
+    private fun onMouseUp(event: MouseEvent) =update {
+        ripples.forEach { it.released = true }
     }
 
-    private fun onMouseLeave(event: MouseEvent): Boolean {
-        update {
-            ripples.forEach { it.released = true }
-        }
-        return true
+    private fun onMouseLeave(event: MouseEvent) = update {
+        ripples.forEach { it.released = true }
     }
 }
 

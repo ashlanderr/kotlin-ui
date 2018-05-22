@@ -49,31 +49,25 @@ class FlatButtonState(override val component: FlatButton) : State() {
         )
     }
 
-    private fun onMouseUp(event: MouseEvent): Boolean {
+    private fun onMouseUp(event: MouseEvent) = update {
+        event.preventBubbling()
         if (down) {
-            update {
-                down = false
-                component.onClick()
-            }
-        }
-        return true
-    }
-
-    private fun onMouseDown(event: MouseEvent): Boolean {
-        update { down = component.enabled }
-        return true
-    }
-
-    private fun onMouseEnter(event: MouseEvent): Boolean {
-        update { hover = true }
-        return true
-    }
-
-    private fun onMouseLeave(event: MouseEvent): Boolean {
-        update {
-            hover = false
             down = false
+            component.onClick()
         }
-        return true
+    }
+
+    private fun onMouseDown(event: MouseEvent) = update {
+        event.preventBubbling()
+        down = component.enabled
+    }
+
+    private fun onMouseEnter(event: MouseEvent) = update {
+        hover = true
+    }
+
+    private fun onMouseLeave(event: MouseEvent) = update {
+        hover = false
+        down = false
     }
 }

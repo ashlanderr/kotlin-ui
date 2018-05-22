@@ -7,10 +7,10 @@ class EventProcessor(private val root: Node) {
     fun mouseUp(point: Point) = mouseEvent(point, EventsTarget::mouseUp)
     fun mouseMove(point: Point) = mouseEvent(point, EventsTarget::mouseMove)
     fun mouseClick(point: Point) = mouseEvent(point, EventsTarget::mouseClick)
-    fun mouseEnter(point: Point) = mouseEvent(point, { false })
+    fun mouseEnter(point: Point) = mouseEvent(point, { })
     fun mouseLeave(point: Point) = updateMouseStack(point, emptyList())
 
-    private fun mouseEvent(point: Point, handler: EventsTarget.(MouseEvent) -> Boolean) {
+    private fun mouseEvent(point: Point, handler: EventsTarget.(MouseEvent) -> Unit) {
         val stack = mutableListOf<Node>()
 
         var current: Node? = root
@@ -53,11 +53,12 @@ class EventProcessor(private val root: Node) {
         mouseStack = newStack
     }
 
-    private fun sendEvent(node: Node, target: Node, point: Point, handler: EventsTarget.(MouseEvent) -> Boolean): Boolean {
+    private fun sendEvent(node: Node, target: Node, point: Point, handler: EventsTarget.(MouseEvent) -> Unit): Boolean {
         return if (node is EventsTarget) {
             val currentPoint = Point(point.x - node.renderLeft, point.y - node.renderTop)
             val event = MouseEvent(currentPoint, target)
             node.handler(event)
+            event.bubbling
         } else {
             true
         }

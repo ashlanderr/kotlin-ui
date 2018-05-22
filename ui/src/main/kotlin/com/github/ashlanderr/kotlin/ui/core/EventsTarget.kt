@@ -5,6 +5,13 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
 abstract class AbstractEvent(val target: Node) {
+    var bubbling: Boolean = true
+        private set
+
+    fun preventBubbling() {
+        bubbling = false
+    }
+
     @Suppress("UNCHECKED_CAST")
     override fun toString(): String {
         val clazz = this::class
@@ -17,21 +24,21 @@ abstract class AbstractEvent(val target: Node) {
 class MouseEvent(val point: Point, target: Node) : AbstractEvent(target)
 
 interface EventsTarget {
-    fun mouseDown(event: MouseEvent): Boolean
-    fun mouseUp(event: MouseEvent): Boolean
-    fun mouseClick(event: MouseEvent): Boolean
-    fun mouseLeave(event: MouseEvent): Boolean
-    fun mouseEnter(event: MouseEvent): Boolean
-    fun mouseMove(event: MouseEvent): Boolean
+    fun mouseDown(event: MouseEvent)
+    fun mouseUp(event: MouseEvent)
+    fun mouseClick(event: MouseEvent)
+    fun mouseLeave(event: MouseEvent)
+    fun mouseEnter(event: MouseEvent)
+    fun mouseMove(event: MouseEvent)
 }
 
 class EventListener(
-    var onMouseDown: (MouseEvent) -> Boolean = { true },
-    var onMouseUp: (MouseEvent) -> Boolean = { true },
-    var onMouseClick: (MouseEvent) -> Boolean = { true },
-    var onMouseLeave: (MouseEvent) -> Boolean = { true },
-    var onMouseEnter: (MouseEvent) -> Boolean = { true },
-    var onMouseMove: (MouseEvent) -> Boolean = { true },
+    var onMouseDown: (MouseEvent) -> Unit = { },
+    var onMouseUp: (MouseEvent) -> Unit = { },
+    var onMouseClick: (MouseEvent) -> Unit = { },
+    var onMouseLeave: (MouseEvent) -> Unit = { },
+    var onMouseEnter: (MouseEvent) -> Unit = { },
+    var onMouseMove: (MouseEvent) -> Unit = { },
     @RxNode var child: Node,
     key: Any? = null
 ) : EventsTarget, AbstractNode(key) {
