@@ -4,37 +4,20 @@ import com.github.ashlanderr.kotlin.ui.core.State
 
 typealias AnimationCompletedHandler = () -> Unit
 
-class AnimationManager(private val state: State) {
-    private val animations = mutableListOf<AnimationController>()
-
-    fun add(animation: AnimationController): AnimationController {
-        animations.add(animation)
-        return animation
-    }
-
-    fun remove(animation: AnimationController) {
-        animations.remove(animation)
-    }
-
-    fun update() {
-        animations.removeIf { it.update(state) }
-    }
-}
-
 class AnimationController(
     private val function: AnimationFunction = AnimationFunction.LINEAR,
     private val mode: AnimationMode = AnimationMode.INFINITE,
     private val duration: Double = 1.0,
     private var onCompleted: AnimationCompletedHandler? = null,
     running: Boolean = true
-) {
+) : Updatable {
     enum class AnimationState {
         RUNNING,
         PAUSED,
         COMPLETED
     }
 
-    private var state = if (running) AnimationState.RUNNING else AnimationState.PAUSED
+    private var runningState = if (running) AnimationState.RUNNING else AnimationState.PAUSED
     private var lastTimestamp = System.nanoTime()
     private var times = 0
     private var x = 0.0
@@ -43,21 +26,29 @@ class AnimationController(
         private set
 
     fun resume() {
-        if (state == AnimationState.PAUSED) {
-            state = AnimationState.RUNNING
+        if (runningState == AnimationState.PAUSED) {
+            runningState = AnimationState.RUNNING
             lastTimestamp = System.nanoTime()
         }
     }
 
     fun pause() {
-        if (state == AnimationState.RUNNING) {
-            state = AnimationState.PAUSED
+        if (runningState == AnimationState.RUNNING) {
+            runningState = AnimationState.PAUSED
         }
     }
 
-    fun update(componentState: State): Boolean {
-        if (state == AnimationState.RUNNING) {
-            componentState.update {
+    fun restart() {
+        runningState = AnimationState.RUNNING
+        lastTimestamp = System.nanoTime()
+        times = 0
+        x = 0.0
+        value = 0.0
+    }
+
+    override fun update(state: State): Boolean {
+        if (runningState == AnimationState.RUNNING) {
+            state.update {
                 val newTimestamp = System.nanoTime()
                 x += (newTimestamp - lastTimestamp) / (1000000000.0 * duration)
                 lastTimestamp = newTimestamp
@@ -65,7 +56,7 @@ class AnimationController(
                 if (x > 1.0) {
                     times += 1
                     if (mode.isCompleted(times)) {
-                        state = AnimationState.COMPLETED
+                        runningState = AnimationState.COMPLETED
                         x = 1.0
                         onCompleted?.invoke()
                     } else {
@@ -76,6 +67,6 @@ class AnimationController(
         }
 
         value = function.transform(x)
-        return state == AnimationState.COMPLETED
+        return runningState == AnimationState.COMPLETED
     }
 }

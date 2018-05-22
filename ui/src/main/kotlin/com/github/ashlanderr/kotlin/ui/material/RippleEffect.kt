@@ -84,7 +84,7 @@ class RippleState(override val component: Ripple) : State() {
 
     private val fadeAnimation = animations.add(AnimationController(
         mode = AnimationMode.SINGLE,
-        duration = 0.5,
+        duration = 0.2,
         running = false,
         onCompleted = component.onCompleted
     ))

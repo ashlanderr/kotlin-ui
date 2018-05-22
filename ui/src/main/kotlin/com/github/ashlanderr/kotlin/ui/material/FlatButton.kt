@@ -1,7 +1,9 @@
 package com.github.ashlanderr.kotlin.ui.material
 
 import com.github.ashlanderr.kotlin.ui.core.*
+import com.github.ashlanderr.kotlin.ui.graphics.AnimationManager
 import com.github.ashlanderr.kotlin.ui.graphics.Background
+import com.github.ashlanderr.kotlin.ui.graphics.DoubleTransition
 import com.github.ashlanderr.kotlin.ui.text.DefaultTextStyle
 
 class FlatButton(
@@ -16,17 +18,23 @@ class FlatButton(
 }
 
 class FlatButtonState(override val component: FlatButton) : State() {
-    private var hover = false
+    private val animations = AnimationManager(this)
+    private val hoverTransition = animations.add(DoubleTransition(
+        initialValue = 0.0,
+        duration = 0.2
+    ))
+
     private var down = false
 
     override fun render(): Node {
+        animations.update()
+
         val theme = Theme.of(this)
         val style = component.style
         val textColor = if (component.enabled) style.text(theme) else theme.disabledColor
         val rippleColor = style.ripple(theme)
 
-        val backgroundAlpha = if (hover && component.enabled) 16 else 0
-        val backgroundColor = theme.textColor.copy(alpha = backgroundAlpha)
+        val backgroundColor = theme.textColor.copy(alpha = (hoverTransition.value * 255).toInt())
 
         return EventListener(
             onMouseEnter = this::onMouseEnter,
@@ -63,11 +71,13 @@ class FlatButtonState(override val component: FlatButton) : State() {
     }
 
     private fun onMouseEnter(event: MouseEvent) = update {
-        hover = true
+        if (component.enabled) {
+            hoverTransition.transition(0.125)
+        }
     }
 
     private fun onMouseLeave(event: MouseEvent) = update {
-        hover = false
+        hoverTransition.transition(0.0)
         down = false
     }
 }
