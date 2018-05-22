@@ -20,12 +20,18 @@ interface EventsTarget {
     fun mouseDown(event: MouseEvent): Boolean
     fun mouseUp(event: MouseEvent): Boolean
     fun mouseClick(event: MouseEvent): Boolean
+    fun mouseLeave(event: MouseEvent): Boolean
+    fun mouseEnter(event: MouseEvent): Boolean
+    fun mouseMove(event: MouseEvent): Boolean
 }
 
 class EventListener(
     var onMouseDown: (MouseEvent) -> Boolean = { true },
     var onMouseUp: (MouseEvent) -> Boolean = { true },
     var onMouseClick: (MouseEvent) -> Boolean = { true },
+    var onMouseLeave: (MouseEvent) -> Boolean = { true },
+    var onMouseEnter: (MouseEvent) -> Boolean = { true },
+    var onMouseMove: (MouseEvent) -> Boolean = { true },
     @RxNode var child: Node,
     key: Any? = null
 ) : EventsTarget, AbstractNode(key) {
@@ -54,11 +60,12 @@ class EventListener(
         this.parent = null
     }
 
-    override fun childAtPoint(point: Point): Node? {
-        return child.childAtPoint(point)
-    }
+    override fun childAtPoint(point: Point) = child.takeIf { it.containsPoint(point) }
 
     override fun mouseDown(event: MouseEvent) = onMouseDown(event)
     override fun mouseUp(event: MouseEvent) = onMouseUp(event)
     override fun mouseClick(event: MouseEvent) = onMouseClick(event)
+    override fun mouseLeave(event: MouseEvent) = onMouseLeave(event)
+    override fun mouseEnter(event: MouseEvent) = onMouseEnter(event)
+    override fun mouseMove(event: MouseEvent) = onMouseMove(event)
 }

@@ -41,9 +41,7 @@ abstract class StatefulComponent<S : State, C : StatefulComponent<S, C>>(final o
         state.dispose()
     }
 
-    override fun childAtPoint(point: Point): Node? {
-        return child.childAtPoint(point)
-    }
+    override fun childAtPoint(point: Point) = child.takeIf { it.containsPoint(point) }
 
     protected abstract fun initState(component: C): S
 

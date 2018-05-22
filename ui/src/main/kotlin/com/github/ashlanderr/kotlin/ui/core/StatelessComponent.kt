@@ -36,9 +36,7 @@ abstract class StatelessComponent(final override var key: Any? = null) : Node {
         child = MergeProcessor.merge(child, EmptyNode)
     }
 
-    override fun childAtPoint(point: Point): Node? {
-        return child.childAtPoint(point)
-    }
+    override fun childAtPoint(point: Point) = child.takeIf { it.containsPoint(point) }
 
     abstract fun render(): Node
 

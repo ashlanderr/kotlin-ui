@@ -40,10 +40,26 @@ abstract class Application : Node, JFrame() {
             val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
             eventProcessor.mouseUp(point)
         }
+
+        override fun mouseMoved(e: MouseEvent) {
+            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
+            eventProcessor.mouseMove(point)
+        }
+
+        override fun mouseEntered(e: MouseEvent) {
+            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
+            eventProcessor.mouseEnter(point)
+        }
+
+        override fun mouseExited(e: MouseEvent) {
+            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
+            eventProcessor.mouseLeave(point)
+        }
     }
 
     init {
         addMouseListener(mouseListener)
+        addMouseMotionListener(mouseListener)
     }
 
     final override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {}
@@ -51,7 +67,7 @@ abstract class Application : Node, JFrame() {
     final override fun render(g: Graphics2D) {}
     final override fun mount(parent: Node?) {}
     final override fun unmount() {}
-    final override fun childAtPoint(point: Point) = root.childAtPoint(point)
+    final override fun childAtPoint(point: Point) = root.takeIf { it.containsPoint(point) }
 
     abstract fun render(): Node
 
