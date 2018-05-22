@@ -30,18 +30,9 @@ class RippleEffectState(override val component: RippleEffect) : State() {
         animations.update()
 
         return EventListener(
-            onMouseDown = {
-                update {
-                    if (component.enabled) ripples.add(RippleKey(it.point, false))
-                }
-                true
-            },
-            onMouseUp = {
-                update {
-                    ripples.forEach { it.released = true }
-                }
-                true
-            },
+            onMouseDown = this::onMouseDown,
+            onMouseUp = this::onMouseUp,
+            onMouseLeave = this::onMouseLeave,
             child = Stack(
                 children = children(
                     listOf(component.child),
@@ -57,6 +48,27 @@ class RippleEffectState(override val component: RippleEffect) : State() {
                 )
             )
         )
+    }
+
+    private fun onMouseDown(event: MouseEvent): Boolean {
+        update {
+            if (component.enabled) ripples.add(RippleKey(event.point, false))
+        }
+        return true
+    }
+
+    private fun onMouseUp(event: MouseEvent): Boolean {
+        update {
+            ripples.forEach { it.released = true }
+        }
+        return true
+    }
+
+    private fun onMouseLeave(event: MouseEvent): Boolean {
+        update {
+            ripples.forEach { it.released = true }
+        }
+        return true
     }
 }
 
@@ -105,7 +117,7 @@ class RippleCanvas(
         val top = point.y - radius
         val width = radius * 2
         val height = radius * 2
-        val alpha = (1 - alphaTime) * 0.2
+        val alpha = (1 - alphaTime) * 0.125
         g.color = Color(color.red, color.green, color.blue, (alpha * 255).toInt())
         g.fillOval(left.toInt(), top.toInt(), width.toInt(), height.toInt())
     }

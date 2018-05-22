@@ -1,9 +1,7 @@
 package com.github.ashlanderr.kotlin.ui.material
 
-import com.github.ashlanderr.kotlin.ui.core.EventListener
-import com.github.ashlanderr.kotlin.ui.core.Node
-import com.github.ashlanderr.kotlin.ui.core.State
-import com.github.ashlanderr.kotlin.ui.core.StatefulComponent
+import com.github.ashlanderr.kotlin.ui.core.*
+import com.github.ashlanderr.kotlin.ui.graphics.Background
 import com.github.ashlanderr.kotlin.ui.text.DefaultTextStyle
 
 class FlatButton(
@@ -18,27 +16,64 @@ class FlatButton(
 }
 
 class FlatButtonState(override val component: FlatButton) : State() {
+    private var hover = false
+    private var down = false
+
     override fun render(): Node {
         val theme = Theme.of(this)
         val style = component.style
         val textColor = if (component.enabled) style.text(theme) else theme.disabledColor
         val rippleColor = style.ripple(theme)
 
+        val backgroundAlpha = if (hover && component.enabled) 16 else 0
+        val backgroundColor = theme.textColor.copy(alpha = backgroundAlpha)
+
         return EventListener(
-            onMouseClick = {
-                if (component.enabled) component.onClick()
-                false
-            },
-            child = RippleEffect(
-                color = rippleColor,
-                enabled = component.enabled,
-                child = DefaultTextStyle(
-                    data = theme.textTheme.button.copy(
-                        color = textColor
-                    ),
-                    child = component.content
+            onMouseEnter = this::onMouseEnter,
+            onMouseLeave = this::onMouseLeave,
+            onMouseUp = this::onMouseUp,
+            onMouseDown = this::onMouseDown,
+            child = Background(
+                color = backgroundColor,
+                child = RippleEffect(
+                    color = rippleColor,
+                    enabled = component.enabled,
+                    child = DefaultTextStyle(
+                        data = theme.textTheme.button.copy(
+                            color = textColor
+                        ),
+                        child = component.content
+                    )
                 )
             )
         )
+    }
+
+    private fun onMouseUp(event: MouseEvent): Boolean {
+        if (down) {
+            update {
+                down = false
+                component.onClick()
+            }
+        }
+        return true
+    }
+
+    private fun onMouseDown(event: MouseEvent): Boolean {
+        update { down = component.enabled }
+        return true
+    }
+
+    private fun onMouseEnter(event: MouseEvent): Boolean {
+        update { hover = true }
+        return true
+    }
+
+    private fun onMouseLeave(event: MouseEvent): Boolean {
+        update {
+            hover = false
+            down = false
+        }
+        return true
     }
 }
