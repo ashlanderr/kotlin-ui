@@ -55,6 +55,11 @@ abstract class Application : Node, JFrame() {
             val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
             eventProcessor.mouseLeave(point)
         }
+
+        override fun mouseDragged(e: MouseEvent) {
+            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
+            eventProcessor.mouseDrag(point)
+        }
     }
 
     init {

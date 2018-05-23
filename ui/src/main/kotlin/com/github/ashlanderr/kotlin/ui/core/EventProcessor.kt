@@ -9,6 +9,7 @@ class EventProcessor(private val root: Node) {
     fun mouseClick(point: Point) = mouseEvent(point, EventsTarget::mouseClick)
     fun mouseEnter(point: Point) = mouseEvent(point, { })
     fun mouseLeave(point: Point) = updateMouseStack(point, emptyList())
+    fun mouseDrag(point: Point) = mouseEvent(point, EventsTarget::mouseDrag)
 
     private fun mouseEvent(point: Point, handler: EventsTarget.(MouseEvent) -> Unit) {
         val stack = mutableListOf<Node>()

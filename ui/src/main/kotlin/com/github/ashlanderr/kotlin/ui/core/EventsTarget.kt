@@ -30,6 +30,7 @@ interface EventsTarget {
     fun mouseLeave(event: MouseEvent)
     fun mouseEnter(event: MouseEvent)
     fun mouseMove(event: MouseEvent)
+    fun mouseDrag(event: MouseEvent)
 }
 
 class EventListener(
@@ -39,6 +40,7 @@ class EventListener(
     var onMouseLeave: (MouseEvent) -> Unit = { },
     var onMouseEnter: (MouseEvent) -> Unit = { },
     var onMouseMove: (MouseEvent) -> Unit = { },
+    var onMouseDrag: (MouseEvent) -> Unit = { },
     @RxNode var child: Node,
     key: Any? = null
 ) : EventsTarget, AbstractNode(key) {
@@ -75,4 +77,5 @@ class EventListener(
     override fun mouseLeave(event: MouseEvent) = onMouseLeave(event)
     override fun mouseEnter(event: MouseEvent) = onMouseEnter(event)
     override fun mouseMove(event: MouseEvent) = onMouseMove(event)
+    override fun mouseDrag(event: MouseEvent) = onMouseDrag(event)
 }
