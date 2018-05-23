@@ -61,6 +61,8 @@ class Cell(
     var row: Int = 0,
     var columnSpan: Int = 1,
     var rowSpan: Int = 1,
+    var horizontalAlign: HorizontalAlign = HorizontalAlign.STRETCH,
+    var verticalAlign: VerticalAlign = VerticalAlign.STRETCH,
     @RxNode var child: Node,
     key: Any? = null
 ) : AbstractNode(key) {
@@ -74,19 +76,22 @@ class Cell(
         grid.rows[row + rowSpan - 1].expand(child.renderHeight)
     }
 
-    fun computeSize(g: Graphics2D) {
+    fun computeSize(g: Graphics2D, w: Constraint, h: Constraint) {
         renderWidth = grid.columns.sumSize(column, columnSpan)
         renderHeight = grid.rows.sumSize(row, rowSpan)
 
-        val cw = Constraint.Max(renderWidth)
-        val ch = Constraint.Max(renderHeight)
+        val cw = horizontalAlign.computeWidth(renderWidth, w)
+        val ch = verticalAlign.computeHeight(renderHeight, h)
         child.measure(g, cw, ch)
     }
 
     override fun arrange(left: Double, top: Double) {
         renderLeft = grid.columns[column].offset + left
         renderTop = grid.rows[row].offset + top
-        child.arrange(renderLeft, renderTop)
+
+        val cl = horizontalAlign.computeLeft(child.renderWidth, renderWidth)
+        val ct = verticalAlign.computeTop(child.renderHeight, renderHeight)
+        child.arrange(renderLeft + cl, renderTop + ct)
     }
 
     override fun render(g: Graphics2D) {
@@ -124,7 +129,7 @@ class Grid(
         computeFlex(columns, w)
         computeFlex(rows, h)
 
-        children.forEach { it.computeSize(g) }
+        children.forEach { it.computeSize(g, w, h) }
 
         renderWidth = columns.sumSize()
         renderHeight = rows.sumSize()
