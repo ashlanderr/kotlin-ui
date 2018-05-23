@@ -6,6 +6,7 @@ import com.github.ashlanderr.kotlin.ui.core.StatefulComponent
 import com.github.ashlanderr.kotlin.ui.layout.*
 import com.github.ashlanderr.kotlin.ui.material.ButtonStyle
 import com.github.ashlanderr.kotlin.ui.material.FlatButton
+import com.github.ashlanderr.kotlin.ui.material.Window
 import com.github.ashlanderr.kotlin.ui.text.TextBlock
 import javax.swing.JFrame
 
@@ -45,12 +46,18 @@ class CounterState(override val component: Counter) : State() {
 }
 
 class CounterApp : Application() {
-    override fun render() = Center(Counter())
+    override fun render() = Window(
+        title = TextBlock(
+            text = "Counter"
+        ),
+        content = Center(Counter())
+    )
 }
 
 fun main(args: Array<String>) {
     val app = CounterApp()
     app.setBounds(200, 200, 800, 600)
     app.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+    app.isUndecorated = true
     app.isVisible = true
 }

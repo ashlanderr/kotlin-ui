@@ -5,10 +5,7 @@ import com.github.ashlanderr.kotlin.ui.core.Node
 import com.github.ashlanderr.kotlin.ui.core.StatelessComponent
 import com.github.ashlanderr.kotlin.ui.graphics.Rect
 import com.github.ashlanderr.kotlin.ui.layout.*
-import com.github.ashlanderr.kotlin.ui.material.ButtonStyle
-import com.github.ashlanderr.kotlin.ui.material.FlatButton
-import com.github.ashlanderr.kotlin.ui.material.Theme
-import com.github.ashlanderr.kotlin.ui.material.ThemeData
+import com.github.ashlanderr.kotlin.ui.material.*
 import com.github.ashlanderr.kotlin.ui.text.TextBlock
 import com.github.ashlanderr.kotlin.ui.text.TextStyle
 import java.awt.Color
@@ -77,17 +74,22 @@ class Gallery : StatelessComponent() {
 }
 
 class GalleryApp : Application() {
-    override fun render() = Grid(
-        columns = elements {
-            flex(1.0)
-            flex(1.0)
-        },
-        rows = elements {
-            flex(1.0)
-        },
-        children = mutableListOf(
-            themedGallery(0, LIGHT_THEME),
-            themedGallery(1, DARK_THEME)
+    override fun render() = Window(
+        title = TextBlock(
+            text = "Material gallery"
+        ),
+        content = Grid(
+            columns = elements {
+                flex(1.0)
+                flex(1.0)
+            },
+            rows = elements {
+                flex(1.0)
+            },
+            children = mutableListOf(
+                themedGallery(0, LIGHT_THEME),
+                themedGallery(1, DARK_THEME)
+            )
         )
     )
 
@@ -111,5 +113,6 @@ fun main(args: Array<String>) {
     val app = GalleryApp()
     app.setBounds(200, 200, 800, 600)
     app.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+    app.isUndecorated = true
     app.isVisible = true
 }
