@@ -58,5 +58,5 @@ class Stack(
         this.parent = null
     }
 
-    override fun childAtPoint(point: Point) = children.asReversed().childAtPoint(point)
+    override fun childAtPoint(point: Point) = children.childAtPoint(point)
 }

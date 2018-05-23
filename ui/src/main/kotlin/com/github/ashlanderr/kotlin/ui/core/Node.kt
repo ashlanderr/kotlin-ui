@@ -25,7 +25,7 @@ fun Node.containsPoint(point: Point): Boolean {
 }
 
 fun List<Node>.childAtPoint(point: Point): Node? {
-    for (child in this) {
+    for (child in this.asReversed()) {
         if (child.containsPoint(point)) return child
     }
     return null
