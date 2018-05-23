@@ -26,39 +26,19 @@ abstract class Application : Node, JFrame() {
     private val eventProcessor = EventProcessor(this)
 
     private val mouseListener = object : MouseAdapter() {
-        override fun mouseClicked(e: MouseEvent) {
-            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
-            eventProcessor.mouseClick(point)
-        }
+        override fun mouseClicked(e: MouseEvent) = mouseEvent(e, EventProcessor::mouseClick)
+        override fun mousePressed(e: MouseEvent) = mouseEvent(e, EventProcessor::mouseDown)
+        override fun mouseReleased(e: MouseEvent) = mouseEvent(e, EventProcessor::mouseUp)
+        override fun mouseMoved(e: MouseEvent) = mouseEvent(e, EventProcessor::mouseMove)
+        override fun mouseEntered(e: MouseEvent) = mouseEvent(e, EventProcessor::mouseEnter)
+        override fun mouseExited(e: MouseEvent) = mouseEvent(e, EventProcessor::mouseLeave)
+        override fun mouseDragged(e: MouseEvent) = mouseEvent(e, EventProcessor::mouseDrag)
 
-        override fun mousePressed(e: MouseEvent) {
+        private fun mouseEvent(e: MouseEvent, handler: EventProcessor.(com.github.ashlanderr.kotlin.ui.core.MouseEvent) -> Unit) {
             val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
-            eventProcessor.mouseDown(point)
-        }
-
-        override fun mouseReleased(e: MouseEvent) {
-            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
-            eventProcessor.mouseUp(point)
-        }
-
-        override fun mouseMoved(e: MouseEvent) {
-            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
-            eventProcessor.mouseMove(point)
-        }
-
-        override fun mouseEntered(e: MouseEvent) {
-            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
-            eventProcessor.mouseEnter(point)
-        }
-
-        override fun mouseExited(e: MouseEvent) {
-            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
-            eventProcessor.mouseLeave(point)
-        }
-
-        override fun mouseDragged(e: MouseEvent) {
-            val point = Point(e.point.x.toDouble(), e.point.y.toDouble())
-            eventProcessor.mouseDrag(point)
+            val screenPoint = Point(e.xOnScreen.toDouble(), e.yOnScreen.toDouble())
+            val event = com.github.ashlanderr.kotlin.ui.core.MouseEvent(point, screenPoint, this@Application)
+            eventProcessor.handler(event)
         }
     }
 

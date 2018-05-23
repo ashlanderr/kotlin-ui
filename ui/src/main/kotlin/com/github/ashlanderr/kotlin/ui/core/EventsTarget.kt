@@ -21,7 +21,7 @@ abstract class AbstractEvent(val target: Node) {
     }
 }
 
-class MouseEvent(val point: Point, target: Node) : AbstractEvent(target)
+class MouseEvent(val point: Point, val screenPoint: Point, target: Node) : AbstractEvent(target)
 
 interface EventsTarget {
     fun mouseDown(event: MouseEvent)
