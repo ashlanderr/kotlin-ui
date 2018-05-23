@@ -4,7 +4,9 @@ import com.github.ashlanderr.kotlin.ui.core.*
 import com.github.ashlanderr.kotlin.ui.graphics.AnimationManager
 import com.github.ashlanderr.kotlin.ui.graphics.Background
 import com.github.ashlanderr.kotlin.ui.graphics.DoubleTransition
+import com.github.ashlanderr.kotlin.ui.graphics.WithCursor
 import com.github.ashlanderr.kotlin.ui.text.DefaultTextStyle
+import java.awt.Cursor
 
 class FlatButton(
     var content: Node,
@@ -41,16 +43,19 @@ class FlatButtonState(override val component: FlatButton) : State() {
             onMouseLeave = this::onMouseLeave,
             onMouseUp = this::onMouseUp,
             onMouseDown = this::onMouseDown,
-            child = Background(
-                color = backgroundColor,
-                child = RippleEffect(
-                    color = rippleColor,
-                    enabled = component.enabled,
-                    child = DefaultTextStyle(
-                        data = theme.textTheme.button.copy(
-                            color = textColor
-                        ),
-                        child = component.content
+            child = WithCursor(
+                cursor = Cursor(Cursor.HAND_CURSOR),
+                child = Background(
+                    color = backgroundColor,
+                    child = RippleEffect(
+                        color = rippleColor,
+                        enabled = component.enabled,
+                        child = DefaultTextStyle(
+                            data = theme.textTheme.button.copy(
+                                color = textColor
+                            ),
+                            child = component.content
+                        )
                     )
                 )
             )
