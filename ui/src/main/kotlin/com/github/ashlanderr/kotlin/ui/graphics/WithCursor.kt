@@ -13,21 +13,37 @@ class WithCursor(
 
 class WithCursorState(override val component: WithCursor) : State() {
     lateinit var parentCursor: Cursor
+    private var mouseOver = false
 
-    override fun render() = EventListener(
-        onMouseEnter = this::onMouseEnter,
-        onMouseLeave = this::onMouseLeave,
-        child = component.child
-    )
+    override fun render(): Node {
+        checkCursor()
 
-    private fun onMouseEnter(event: MouseEvent) {
+        return EventListener(
+            onMouseEnter = this::onMouseEnter,
+            onMouseLeave = this::onMouseLeave,
+            child = component.child
+        )
+    }
+
+    private fun onMouseEnter(event: MouseEvent) = update {
         val app = ancestorNode<Application>()!!
         parentCursor = app.cursor
         app.cursor = component.cursor
+        mouseOver = true
     }
 
-    private fun onMouseLeave(event: MouseEvent) {
+    private fun onMouseLeave(event: MouseEvent) = update {
         val app = ancestorNode<Application>()!!
         app.cursor = parentCursor
+        mouseOver = false
+    }
+
+    private fun checkCursor() {
+        if (mouseOver) {
+            val app = ancestorNode<Application>()!!
+            if (app.cursor.type != component.cursor.type) {
+                app.cursor = component.cursor
+            }
+        }
     }
 }
