@@ -1,32 +1,35 @@
 package com.github.ashlanderr.kotlin.ui.core
 
 class EventProcessor(private val root: Node) {
+    private var mouseCaptured = false
     private var mouseStack: List<Node> = emptyList()
 
-    fun mouseDown(event: MouseEvent) = mouseEvent(event, EventsTarget::mouseDown)
-    fun mouseUp(event: MouseEvent) = mouseEvent(event, EventsTarget::mouseUp)
+    fun mouseDown(event: MouseEvent) = mouseEvent(event, EventsTarget::mouseDown, capture = true)
+    fun mouseUp(event: MouseEvent) = mouseEvent(event, EventsTarget::mouseUp, release = true)
     fun mouseMove(event: MouseEvent) = mouseEvent(event, EventsTarget::mouseMove)
     fun mouseClick(event: MouseEvent) = mouseEvent(event, EventsTarget::mouseClick)
-    fun mouseEnter(event: MouseEvent) = mouseEvent(event, { })
+    fun mouseEnter(event: MouseEvent) = updateMouseStack(event, computeMouseStack(event))
     fun mouseLeave(event: MouseEvent) = updateMouseStack(event, emptyList())
     fun mouseDrag(event: MouseEvent) = mouseEvent(event, EventsTarget::mouseDrag)
 
-    private fun mouseEvent(event: MouseEvent, handler: EventsTarget.(MouseEvent) -> Unit) {
-        val stack = mutableListOf<Node>()
+    private fun mouseEvent(
+        event: MouseEvent,
+        handler: EventsTarget.(MouseEvent) -> Unit,
+        capture: Boolean = false,
+        release: Boolean = false
+    ) {
+        mouseCaptured = mouseCaptured and (!release)
 
-        var current: Node? = root
-        var target = root
-        var next: Node? = current
-
-        while (next != null) {
-            current = next
-            target = next
-            stack.add(next)
-            next = current.childAtPoint(event.point)
-        }
-
+        val stack = computeMouseStack(event)
         updateMouseStack(event, stack)
+        bubbleEvent(event, handler)
 
+        mouseCaptured = mouseCaptured or capture
+    }
+
+    private fun bubbleEvent(event: MouseEvent, handler: EventsTarget.(MouseEvent) -> Unit) {
+        val target = mouseStack.last()
+        var current: Node? = target
         var bubbling = true
 
         while (bubbling && current != null) {
@@ -35,7 +38,26 @@ class EventProcessor(private val root: Node) {
         }
     }
 
+    private fun computeMouseStack(event: MouseEvent): List<Node> {
+        if (mouseCaptured) return mouseStack
+
+        val stack = mutableListOf<Node>()
+
+        var current: Node? = root
+        var next: Node? = current
+
+        while (next != null) {
+            current = next
+            stack.add(next)
+            next = current.childAtPoint(event.point)
+        }
+
+        return stack
+    }
+
     private fun updateMouseStack(event: MouseEvent, newStack: List<Node>) {
+        if (mouseCaptured) return
+
         val commonSize = mouseStack
             .zip(newStack)
             .takeWhile { it.first == it.second }
