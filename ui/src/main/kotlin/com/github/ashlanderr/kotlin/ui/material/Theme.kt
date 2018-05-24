@@ -5,6 +5,7 @@ import com.github.ashlanderr.kotlin.ui.core.State
 import com.github.ashlanderr.kotlin.ui.core.StatelessComponent
 import com.github.ashlanderr.kotlin.ui.core.ancestor
 import com.github.ashlanderr.kotlin.ui.graphics.Background
+import com.github.ashlanderr.kotlin.ui.text.DefaultTextStyle
 import com.github.ashlanderr.kotlin.ui.text.TextStyle
 import java.awt.Color
 import java.awt.Font
@@ -47,6 +48,11 @@ class Theme(
 
     override fun render() = Background(
         color = data.canvasColor,
-        child = child
+        child = DefaultTextStyle(
+            data = TextStyle(
+                color = data.textColor
+            ),
+            child = child
+        )
     )
 }

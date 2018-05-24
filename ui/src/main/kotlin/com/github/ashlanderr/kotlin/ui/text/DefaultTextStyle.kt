@@ -9,7 +9,7 @@ import java.awt.Font
 
 data class TextStyle(
     val color: Color = Color.BLACK,
-    val fontFamily: String = Font.SANS_SERIF,
+    val fontFamily: String = Fonts.ROBOTO,
     val fontStyle: Int = Font.PLAIN,
     val fontSize: Double = 12.0
 )
