@@ -45,7 +45,8 @@ class WindowTitleState(override val component: WindowTitle) : State() {
 
         return EventListener(
             onMouseDrag = this::onMouseDrag,
-            onMouseUp = this::onMouseUp,
+            onMouseUp = this::onDragStop,
+            onMouseLeave = this::onDragStop,
             child = WithCursor(
                 cursor = Cursor(cursor),
                 child = DefaultTextStyle(
@@ -79,7 +80,7 @@ class WindowTitleState(override val component: WindowTitle) : State() {
         }
     }
 
-    private fun onMouseUp(event: MouseEvent) = update {
+    private fun onDragStop(event: MouseEvent) = update {
         dragging = false
     }
 }
