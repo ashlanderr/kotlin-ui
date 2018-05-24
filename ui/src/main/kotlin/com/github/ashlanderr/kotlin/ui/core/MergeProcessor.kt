@@ -1,5 +1,6 @@
 package com.github.ashlanderr.kotlin.ui.core
 
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
@@ -8,6 +9,10 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
 object MergeProcessor {
+    private val props = ConcurrentHashMap<Class<*>, List<KMutableProperty1<Node, Any?>>>()
+    private val nodes = ConcurrentHashMap<Class<*>, List<KMutableProperty1<Node, Node>>>()
+    private val lists = ConcurrentHashMap<Class<*>, List<KProperty1<Node, MutableList<Node>>>>()
+
     fun merge(current: Node, next: Node, parent: Node? = null): Node {
         val currentClazz = current::class
         val nextClazz = next::class
@@ -100,27 +105,27 @@ object MergeProcessor {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun getProps(clazz: KClass<out Node>): List<KMutableProperty1<Node, Any?>> {
+    private fun getProps(clazz: KClass<out Node>) = props.computeIfAbsent(clazz.java) {
         val names = mutableSetOf<String>()
         clazz.primaryConstructor
-            ?.parameters
-            ?.mapNotNullTo(names) { it.name }
+                ?.parameters
+                ?.mapNotNullTo(names) { it.name }
 
-        return clazz.memberProperties
-            .filter { it.name in names && it.findAnnotation<RxNode>() == null && it.findAnnotation<RxList>() == null }
-            .map { it as KMutableProperty1<Node, Any?> }
+        clazz.memberProperties
+                .filter { it.name in names && it.findAnnotation<RxNode>() == null && it.findAnnotation<RxList>() == null }
+                .map { it as KMutableProperty1<Node, Any?> }
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun getNodes(clazz: KClass<out Node>): List<KMutableProperty1<Node, Node>> {
-        return clazz.memberProperties
+    private fun getNodes(clazz: KClass<out Node>) = nodes.computeIfAbsent(clazz.java) {
+        clazz.memberProperties
             .filter { it.findAnnotation<RxNode>() != null }
             .map { it as KMutableProperty1<Node, Node> }
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun getLists(clazz: KClass<out Node>): List<KProperty1<Node, MutableList<Node>>> {
-        return clazz.memberProperties
+    private fun getLists(clazz: KClass<out Node>) = lists.computeIfAbsent(clazz.java) {
+        clazz.memberProperties
             .filter { it.findAnnotation<RxList>() != null }
             .map { it as KProperty1<Node, MutableList<Node>> }
     }
