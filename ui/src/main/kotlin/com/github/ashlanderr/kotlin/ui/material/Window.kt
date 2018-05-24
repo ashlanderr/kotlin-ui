@@ -52,7 +52,7 @@ class WindowTitleState(override val component: WindowTitle) : State() {
                 child = DefaultTextStyle(
                     data = TextStyle(
                         color = theme.alternateTextColor,
-                        fontSize = 16,
+                        fontSize = 16.0,
                         fontStyle = Font.BOLD
                     ),
                     child = Padding(

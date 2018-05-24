@@ -48,7 +48,7 @@ class Icon(
 
     private fun applyStyle(g: Graphics2D) {
         val defaultStyle = DefaultTextStyle.of(this)
-        g.font = Font(icon.fontFamily, Font.PLAIN, size?.toInt() ?: defaultStyle.fontSize)
+        g.font = Font(icon.fontFamily, Font.PLAIN, (size ?: defaultStyle.fontSize).toInt())
         g.color = color ?: defaultStyle.color
     }
 }

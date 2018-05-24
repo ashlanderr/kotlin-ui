@@ -11,7 +11,7 @@ data class TextStyle(
     val color: Color = Color.BLACK,
     val fontFamily: String = Font.SANS_SERIF,
     val fontStyle: Int = Font.PLAIN,
-    val fontSize: Int = 12
+    val fontSize: Double = 12.0
 )
 
 class DefaultTextStyle(

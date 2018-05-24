@@ -7,7 +7,6 @@ import com.github.ashlanderr.kotlin.ui.graphics.Rect
 import com.github.ashlanderr.kotlin.ui.layout.*
 import com.github.ashlanderr.kotlin.ui.material.*
 import com.github.ashlanderr.kotlin.ui.text.TextBlock
-import com.github.ashlanderr.kotlin.ui.text.TextStyle
 import java.awt.Color
 import javax.swing.JFrame
 
@@ -48,7 +47,7 @@ class Gallery : StatelessComponent() {
         align = HorizontalAlign.STRETCH,
         children = mutableListOf(
             TextBlock(
-                style = TextStyle(fontSize = 24, color = Theme.of(this).textColor),
+                fontSize = 24.0,
                 text = title
             ),
             SizedBox(width = 0.0, height = 12.0),

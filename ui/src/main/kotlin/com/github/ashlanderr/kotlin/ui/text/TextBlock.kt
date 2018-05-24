@@ -4,6 +4,7 @@ import com.github.ashlanderr.kotlin.ui.core.AbstractNode
 import com.github.ashlanderr.kotlin.ui.core.Constraint
 import com.github.ashlanderr.kotlin.ui.core.Node
 import com.github.ashlanderr.kotlin.ui.layout.HorizontalAlign
+import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics2D
 
@@ -11,7 +12,10 @@ class TextBlock(
     var text: String,
     var wrapping: TextWrapping = TextWrapping.NO_WRAP,
     var align: HorizontalAlign = HorizontalAlign.LEFT,
-    var style: TextStyle? = null,
+    var color: Color? = null,
+    var fontFamily: String? = null,
+    var fontStyle: Int? = null,
+    var fontSize: Double? = null,
     key: Any? = null
 ) : AbstractNode(key) {
 
@@ -63,8 +67,10 @@ class TextBlock(
 
     private fun applyStyle(g: Graphics2D) {
         val defaultStyle = DefaultTextStyle.of(this)
-        val style = this.style ?: defaultStyle
-        g.font = Font(style.fontFamily, style.fontStyle, style.fontSize)
-        g.color = style.color
+        g.font = Font(
+            fontFamily ?: defaultStyle.fontFamily,
+            fontStyle ?: defaultStyle.fontStyle,
+            (fontSize ?: defaultStyle.fontSize).toInt())
+        g.color = color ?: defaultStyle.color
     }
 }

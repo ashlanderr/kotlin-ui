@@ -14,7 +14,7 @@ data class TextTheme(
         color = Color.BLACK,
         fontFamily = Font.SANS_SERIF,
         fontStyle = Font.BOLD,
-        fontSize = 12
+        fontSize = 12.0
     )
 )
 
