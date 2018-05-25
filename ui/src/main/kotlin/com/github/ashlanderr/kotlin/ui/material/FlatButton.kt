@@ -34,9 +34,10 @@ class FlatButtonState(override val component: FlatButton) : State() {
         val theme = Theme.of(this)
         val style = component.style
         val textColor = if (component.enabled) style.text(theme) else theme.disabledColor
+        val backgroundColor = style.background(theme)
         val rippleColor = style.ripple(theme)
 
-        val backgroundColor = theme.textColor.copy(alpha = (hoverTransition.value * 255).toInt())
+        val hoverColor = theme.textColor.copy(alpha = (hoverTransition.value * 255).toInt())
 
         return EventListener(
             onMouseEnter = this::onMouseEnter,
@@ -47,14 +48,17 @@ class FlatButtonState(override val component: FlatButton) : State() {
                 cursor = Cursor(Cursor.HAND_CURSOR),
                 child = Background(
                     color = backgroundColor,
-                    child = RippleEffect(
-                        color = rippleColor,
-                        enabled = component.enabled,
-                        child = DefaultTextStyle(
-                            data = theme.textTheme.button.copy(
-                                color = textColor
-                            ),
-                            child = component.content
+                    child = Background(
+                        color = hoverColor,
+                        child = RippleEffect(
+                            color = rippleColor,
+                            enabled = component.enabled,
+                            child = DefaultTextStyle(
+                                data = theme.textTheme.button.copy(
+                                    color = textColor
+                                ),
+                                child = component.content
+                            )
                         )
                     )
                 )
