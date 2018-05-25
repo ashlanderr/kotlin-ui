@@ -77,8 +77,8 @@ class Cell(
     }
 
     fun computeSize(g: Graphics2D) {
-        renderWidth = grid.columns.sumSize(column, columnSpan)
-        renderHeight = grid.rows.sumSize(row, rowSpan)
+        renderWidth = grid.columns.sumSize(grid.horizontalSpacing, column, columnSpan)
+        renderHeight = grid.rows.sumSize(grid.verticalSpacing, row, rowSpan)
 
         val cw = horizontalAlign.computeWidth(child.renderWidth, Constraint.Max(renderWidth))
         val ch = verticalAlign.computeHeight(child.renderHeight, Constraint.Max(renderHeight))
@@ -114,6 +114,8 @@ class Cell(
 class Grid(
     var columns: List<Element>,
     var rows: List<Element>,
+    var horizontalSpacing: Double = 0.0,
+    var verticalSpacing: Double = 0.0,
     @RxList var children: MutableList<Cell>,
     key: Any? = null
 ) : AbstractNode(key) {
@@ -126,21 +128,21 @@ class Grid(
         val ch = Constraint.Min(h.size)
         children.forEach { it.measure(g, cw, ch) }
 
-        computeFlex(columns, w)
-        computeFlex(rows, h)
+        computeFlex(horizontalSpacing, columns, w)
+        computeFlex(horizontalSpacing, rows, h)
 
         children.forEach { it.computeSize(g) }
 
-        renderWidth = columns.sumSize()
-        renderHeight = rows.sumSize()
+        renderWidth = columns.sumSize(horizontalSpacing)
+        renderHeight = rows.sumSize(verticalSpacing)
     }
 
     override fun arrange(left: Double, top: Double) {
         renderLeft = left
         renderTop = top
 
-        arrangeElements(columns)
-        arrangeElements(rows)
+        arrangeElements(horizontalSpacing, columns)
+        arrangeElements(verticalSpacing, rows)
         children.forEach { it.arrange(left, top) }
     }
 
@@ -158,25 +160,25 @@ class Grid(
 
     override fun childAtPoint(point: Point) = children.childAtPoint(point)
 
-    private fun arrangeElements(elements: List<Element>) {
+    private fun arrangeElements(spacing: Double, elements: List<Element>) {
         var offset = 0.0
         for (element in elements) {
             element.offset = offset
-            offset += element.realSize
+            offset += element.realSize + spacing
         }
     }
 
-    private fun computeFlex(elements: List<Element>, full: Constraint) {
-        val fixed = elements.sumSize()
+    private fun computeFlex(spacing: Double, elements: List<Element>, full: Constraint) {
+        val fixed = elements.sumSize(spacing)
         val available = full.compute(fixed, full.size) - fixed
         val totalWeight = elements.sumWeight()
         elements.forEach { it.flex(it.weight / totalWeight * available) }
     }
 }
 
-private fun List<Element>.sumSize(fromIndex: Int = 0, count: Int = this.size) = this
+private fun List<Element>.sumSize(spacing: Double, fromIndex: Int = 0, count: Int = this.size) = this
     .subList(fromIndex, fromIndex + count)
-    .sumByDouble { it.realSize }
+    .sumByDouble { it.realSize + spacing } - spacing
 
 private fun List<Element>.sumWeight(fromIndex: Int = 0, count: Int = this.size) = this
     .subList(fromIndex, fromIndex + count)
