@@ -6,6 +6,7 @@ import com.github.ashlanderr.kotlin.ui.core.StatelessComponent
 import com.github.ashlanderr.kotlin.ui.core.ancestor
 import com.github.ashlanderr.kotlin.ui.graphics.Background
 import com.github.ashlanderr.kotlin.ui.text.DefaultTextStyle
+import com.github.ashlanderr.kotlin.ui.text.Fonts
 import com.github.ashlanderr.kotlin.ui.text.TextStyle
 import java.awt.Color
 import java.awt.Font
@@ -13,7 +14,7 @@ import java.awt.Font
 data class TextTheme(
     val button: TextStyle = TextStyle(
         color = Color.BLACK,
-        fontFamily = Font.SANS_SERIF,
+        fontFamily = Fonts.ROBOTO,
         fontStyle = Font.BOLD,
         fontSize = 12.0
     )
