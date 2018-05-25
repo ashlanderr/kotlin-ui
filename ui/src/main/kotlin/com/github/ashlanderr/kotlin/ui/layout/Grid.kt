@@ -76,12 +76,12 @@ class Cell(
         grid.rows[row + rowSpan - 1].expand(child.renderHeight)
     }
 
-    fun computeSize(g: Graphics2D, w: Constraint, h: Constraint) {
+    fun computeSize(g: Graphics2D) {
         renderWidth = grid.columns.sumSize(column, columnSpan)
         renderHeight = grid.rows.sumSize(row, rowSpan)
 
-        val cw = horizontalAlign.computeWidth(renderWidth, w)
-        val ch = verticalAlign.computeHeight(renderHeight, h)
+        val cw = horizontalAlign.computeWidth(child.renderWidth, Constraint.Max(renderWidth))
+        val ch = verticalAlign.computeHeight(child.renderHeight, Constraint.Max(renderHeight))
         child.measure(g, cw, ch)
     }
 
@@ -129,7 +129,7 @@ class Grid(
         computeFlex(columns, w)
         computeFlex(rows, h)
 
-        children.forEach { it.computeSize(g, w, h) }
+        children.forEach { it.computeSize(g) }
 
         renderWidth = columns.sumSize()
         renderHeight = rows.sumSize()
