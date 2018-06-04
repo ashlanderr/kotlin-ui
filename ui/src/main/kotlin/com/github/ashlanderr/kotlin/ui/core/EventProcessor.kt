@@ -1,8 +1,12 @@
 package com.github.ashlanderr.kotlin.ui.core
 
+import java.awt.geom.AffineTransform
+
 class EventProcessor(private val root: Node) {
     private var mouseCaptured = false
-    private var mouseStack: List<Node> = emptyList()
+    private var mouseStack: List<StackItem> = emptyList()
+
+    private data class StackItem(val node: Node, val transform: AffineTransform)
 
     fun mouseDown(event: MouseEvent) = mouseEvent(event, EventsTarget::mouseDown, capture = true)
     fun mouseUp(event: MouseEvent) = mouseEvent(event, EventsTarget::mouseUp, release = true)
@@ -29,33 +33,38 @@ class EventProcessor(private val root: Node) {
 
     private fun bubbleEvent(event: MouseEvent, handler: EventsTarget.(MouseEvent) -> Unit) {
         val target = mouseStack.last()
-        var current: Node? = target
+        val iterator = mouseStack.asReversed().iterator()
         var bubbling = true
 
-        while (bubbling && current != null) {
+        while (bubbling && iterator.hasNext()) {
+            val current = iterator.next()
             bubbling = sendEvent(current, target, event, handler)
-            current = current.parent
         }
     }
 
-    private fun computeMouseStack(event: MouseEvent): List<Node> {
+    private fun computeMouseStack(event: MouseEvent): List<StackItem> {
         if (mouseCaptured) return mouseStack
 
-        val stack = mutableListOf<Node>()
+        val stack = mutableListOf<StackItem>()
+        val transform = AffineTransform()
 
         var current: Node? = root
         var next: Node? = current
+        var point = event.point
 
         while (next != null) {
             current = next
-            stack.add(next)
-            next = current.childAtPoint(event.point)
+            val currentTransform = current.renderTransform.createInverse()
+            transform.concatenate(currentTransform)
+            stack.add(StackItem(current, AffineTransform(transform)))
+            point = currentTransform.transform(point)
+            next = current.children().childAtPoint(point)
         }
 
         return stack
     }
 
-    private fun updateMouseStack(event: MouseEvent, newStack: List<Node>) {
+    private fun updateMouseStack(event: MouseEvent, newStack: List<StackItem>) {
         if (mouseCaptured) return
 
         val commonSize = mouseStack
@@ -76,10 +85,16 @@ class EventProcessor(private val root: Node) {
         mouseStack = newStack
     }
 
-    private fun sendEvent(node: Node, target: Node, event: MouseEvent, handler: EventsTarget.(MouseEvent) -> Unit): Boolean {
+    private fun sendEvent(
+        current: StackItem,
+        target: StackItem,
+        event: MouseEvent,
+        handler: EventsTarget.(MouseEvent) -> Unit
+    ): Boolean {
+        val node = current.node
         return if (node is EventsTarget) {
-            val currentPoint = Point(event.point.x - node.renderLeft, event.point.y - node.renderTop)
-            val currentEvent = MouseEvent(currentPoint, event.screenPoint, target)
+            val currentPoint = current.transform.transform(event.point)
+            val currentEvent = MouseEvent(currentPoint, event.screenPoint, target.node)
             node.handler(currentEvent)
             currentEvent.bubbling
         } else {

@@ -2,6 +2,7 @@ package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 
 class AspectRatio(
     var ratio: Double,
@@ -26,27 +27,16 @@ class AspectRatio(
         child.measure(g, Constraint.Max(renderWidth), Constraint.Max(renderHeight))
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
-        child.arrange(left, top)
+    override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
+        child.arrange(AffineTransform())
     }
 
-    override fun render(g: Graphics2D) {
-        val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
-
-        child.render(g)
-
-        g.popClip(clip)
+    override fun render(g: Graphics2D) = renderChildren(g) {
+        clip(g) {
+            child.render(g)
+        }
     }
 
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
-    }
-
-    override fun childAtPoint(point: Point) = child.takeIf { child.containsPoint(point) }
+    override fun children() = listOf(child)
 }

@@ -3,13 +3,13 @@ package com.github.ashlanderr.kotlin.ui.core
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.geom.AffineTransform
 import javax.swing.JFrame
 import javax.swing.Timer
 
 @Suppress("LeakingThis")
 abstract class Application : Node, JFrame() {
-    final override val renderLeft: Double = 0.0
-    final override val renderTop: Double = 0.0
+    final override val renderTransform = AffineTransform()
     final override val renderWidth: Double = 0.0
     final override val renderHeight: Double = 0.0
     final override val parent: Node? = null
@@ -48,11 +48,12 @@ abstract class Application : Node, JFrame() {
     }
 
     final override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {}
-    final override fun arrange(left: Double, top: Double) {}
+    final override fun arrange(transform: AffineTransform) {}
     final override fun render(g: Graphics2D) {}
     final override fun mount(parent: Node?) {}
     final override fun unmount() {}
-    final override fun childAtPoint(point: Point) = root.takeIf { it.containsPoint(point) }
+    override fun children() = listOf(root)
+    override fun parentToLocal(point: Point) = point
 
     abstract fun render(): Node
 
@@ -65,7 +66,7 @@ abstract class Application : Node, JFrame() {
 
         root = MergeProcessor.merge(root, render(), this)
         root.measure(buffer, Constraint.Max(bufferWidth.toDouble()), Constraint.Max(bufferHeight.toDouble()))
-        root.arrange(0.0, 0.0)
+        root.arrange(AffineTransform())
         root.render(buffer)
 
         g.drawImage(bufferImage, 0, 0, this)

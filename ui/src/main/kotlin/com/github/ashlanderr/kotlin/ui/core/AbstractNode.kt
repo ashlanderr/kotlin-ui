@@ -1,12 +1,10 @@
 package com.github.ashlanderr.kotlin.ui.core
 
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 
 abstract class AbstractNode(override var key: Any?) : Node {
-    override var renderLeft: Double = 0.0
-        protected set
-
-    override var renderTop: Double = 0.0
+    override var renderTransform = AffineTransform()
         protected set
 
     override var renderWidth: Double = 0.0
@@ -15,13 +13,22 @@ abstract class AbstractNode(override var key: Any?) : Node {
     override var renderHeight: Double = 0.0
         protected set
 
-    override var parent: Node? = null
-        protected set
+    final override var parent: Node? = null
+        private set
 
     override fun measure(g: Graphics2D, w: Constraint, h: Constraint) {}
-    override fun arrange(left: Double, top: Double) {}
+    override fun arrange(transform: AffineTransform) {}
     override fun render(g: Graphics2D) {}
-    override fun mount(parent: Node?) {}
-    override fun unmount() {}
-    override fun childAtPoint(point: Point): Node? = null
+
+    override fun mount(parent: Node?) {
+        this.parent = parent
+    }
+
+    override fun unmount() {
+        this.parent = null
+    }
+
+    override fun children() = emptyList<Node>()
+
+    override fun parentToLocal(point: Point) = renderTransform.transform(point)
 }

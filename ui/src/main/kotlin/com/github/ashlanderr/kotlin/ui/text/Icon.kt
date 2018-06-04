@@ -2,10 +2,11 @@ package com.github.ashlanderr.kotlin.ui.text
 
 import com.github.ashlanderr.kotlin.ui.core.AbstractNode
 import com.github.ashlanderr.kotlin.ui.core.Constraint
-import com.github.ashlanderr.kotlin.ui.core.Node
+import com.github.ashlanderr.kotlin.ui.core.withTransform
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 
 class Icon(
     var icon: IconData,
@@ -26,24 +27,15 @@ class Icon(
         renderHeight = iconHeight
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
+    override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
     }
 
-    override fun render(g: Graphics2D) {
+    override fun render(g: Graphics2D) = g.withTransform(renderTransform) {
         applyStyle(g)
         val fm = g.fontMetrics
         chars[0] = icon.codePoint.toChar()
-        g.drawChars(chars, 0, 1, (renderLeft + offset).toInt(), (renderTop + fm.ascent).toInt())
-    }
-
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
+        g.drawChars(chars, 0, 1, offset.toInt(), fm.ascent)
     }
 
     private fun applyStyle(g: Graphics2D) {

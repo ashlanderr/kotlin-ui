@@ -2,6 +2,7 @@ package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 
 data class Indent(val left: Double, val top: Double, val right: Double, val bottom: Double) {
     companion object {
@@ -31,23 +32,16 @@ class Padding(
         renderHeight = child.renderHeight + verticalPadding
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
-        child.arrange(left + padding.left, top + padding.top)
+    override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
+        child.arrange(AffineTransform().apply {
+            translate(padding.left, padding.top)
+        })
     }
 
-    override fun render(g: Graphics2D) {
+    override fun render(g: Graphics2D) = renderChildren(g) {
         child.render(g)
     }
 
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
-    }
-
-    override fun childAtPoint(point: Point) = child.takeIf { it.containsPoint(point) }
+    override fun children() = listOf(child)
 }

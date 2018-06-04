@@ -1,27 +1,29 @@
 package com.github.ashlanderr.kotlin.ui.core
 
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 
 interface Node {
-    val renderLeft: Double
-    val renderTop: Double
+    val renderTransform: AffineTransform
     val renderWidth: Double
     val renderHeight: Double
     val parent: Node?
     val key: Any?
 
     fun measure(g: Graphics2D, w: Constraint, h: Constraint)
-    fun arrange(left: Double, top: Double)
+    fun arrange(transform: AffineTransform)
     fun render(g: Graphics2D)
 
     fun mount(parent: Node?)
     fun unmount()
 
-    fun childAtPoint(point: Point): Node?
+    fun children(): List<Node>
+    fun parentToLocal(point: Point): Point
 }
 
 fun Node.containsPoint(point: Point): Boolean {
-    return point.x >= renderLeft && point.y >= renderTop && point.x <= renderLeft + renderWidth && point.y <= renderTop + renderHeight
+    val childPoint = this.renderTransform.createInverse().transform(point)
+    return childPoint.x >= 0 && childPoint.y >= 0 && childPoint.x <= renderWidth && childPoint.y <= renderHeight
 }
 
 fun List<Node>.childAtPoint(point: Point): Node? {

@@ -2,6 +2,7 @@ package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 import kotlin.math.max
 
 class Column(
@@ -30,35 +31,26 @@ class Column(
         }
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
-        var childTop = top
+    override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
+        var childTop = 0.0
 
         for (child in children) {
-            val childLeft = align.computeLeft(child.renderWidth, renderWidth) + renderLeft
-            child.arrange(childLeft, childTop)
+            val childLeft = align.computeLeft(child.renderWidth, renderWidth)
+            child.arrange(AffineTransform().apply {
+                translate(childLeft, childTop)
+            })
             childTop += child.renderHeight
         }
     }
 
-    override fun render(g: Graphics2D) {
-        val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
-
+    override fun render(g: Graphics2D) = renderChildren(g) {
         for (child in children) {
-            child.render(g)
+            clip(g, child) {
+                child.render(g)
+            }
         }
-
-        g.popClip(clip)
     }
 
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
-    }
-
-    override fun childAtPoint(point: Point) = children.childAtPoint(point)
+    override fun children() = children
 }

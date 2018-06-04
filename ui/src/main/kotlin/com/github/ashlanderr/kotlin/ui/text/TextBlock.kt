@@ -2,11 +2,12 @@ package com.github.ashlanderr.kotlin.ui.text
 
 import com.github.ashlanderr.kotlin.ui.core.AbstractNode
 import com.github.ashlanderr.kotlin.ui.core.Constraint
-import com.github.ashlanderr.kotlin.ui.core.Node
+import com.github.ashlanderr.kotlin.ui.core.withTransform
 import com.github.ashlanderr.kotlin.ui.layout.HorizontalAlign
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 
 class TextBlock(
     var text: String,
@@ -41,28 +42,19 @@ class TextBlock(
         lines.forEach { it.left = align.computeLeft(it.width, renderWidth) }
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
+    override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
     }
 
-    override fun render(g: Graphics2D) {
+    override fun render(g: Graphics2D) = g.withTransform(renderTransform) {
         applyStyle(g)
         val fm = g.fontMetrics
-        var top = renderTop + fm.ascent
+        var top = fm.ascent
 
         for (line in lines) {
-            g.drawString(line.text, (renderLeft + line.left).toInt(), top.toInt())
+            g.drawString(line.text, line.left.toInt(), top)
             top += fm.height
         }
-    }
-
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
     }
 
     private fun applyStyle(g: Graphics2D) {

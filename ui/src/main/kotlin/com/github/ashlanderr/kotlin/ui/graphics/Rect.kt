@@ -2,9 +2,10 @@ package com.github.ashlanderr.kotlin.ui.graphics
 
 import com.github.ashlanderr.kotlin.ui.core.AbstractNode
 import com.github.ashlanderr.kotlin.ui.core.Constraint
-import com.github.ashlanderr.kotlin.ui.core.Node
+import com.github.ashlanderr.kotlin.ui.core.withTransform
 import java.awt.Color
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 
 class Rect(
     var width: Double? = null,
@@ -19,27 +20,18 @@ class Rect(
         renderHeight = height ?: h.compute(0.0, h.size)
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
+    override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
     }
 
-    override fun render(g: Graphics2D) {
+    override fun render(g: Graphics2D) = g.withTransform(renderTransform) {
         if (fill != null) {
             g.color = fill
-            g.fillRect(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
+            g.fillRect(0, 0, renderWidth.toInt(), renderHeight.toInt())
         }
         if (stroke != null) {
             g.color = stroke
-            g.drawRect(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt() - 1, renderHeight.toInt() - 1)
+            g.drawRect(0, 0, renderWidth.toInt() - 1, renderHeight.toInt() - 1)
         }
-    }
-
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
     }
 }

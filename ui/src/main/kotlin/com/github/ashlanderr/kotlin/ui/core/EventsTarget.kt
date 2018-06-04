@@ -1,6 +1,7 @@
 package com.github.ashlanderr.kotlin.ui.core
 
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
@@ -51,25 +52,14 @@ class EventListener(
         renderHeight = child.renderHeight
     }
 
-    override fun arrange(left: Double, top: Double) {
-        child.arrange(left, top)
-        renderLeft = left
-        renderTop = top
+    override fun arrange(transform: AffineTransform) {
+        child.arrange(AffineTransform())
+        renderTransform = transform
     }
 
-    override fun render(g: Graphics2D) {
+    override fun render(g: Graphics2D) = renderChildren(g) {
         child.render(g)
     }
-
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
-    }
-
-    override fun childAtPoint(point: Point) = child.takeIf { it.containsPoint(point) }
 
     override fun mouseDown(event: MouseEvent) = onMouseDown(event)
     override fun mouseUp(event: MouseEvent) = onMouseUp(event)
@@ -78,4 +68,5 @@ class EventListener(
     override fun mouseEnter(event: MouseEvent) = onMouseEnter(event)
     override fun mouseMove(event: MouseEvent) = onMouseMove(event)
     override fun mouseDrag(event: MouseEvent) = onMouseDrag(event)
+    override fun children() = listOf(child)
 }

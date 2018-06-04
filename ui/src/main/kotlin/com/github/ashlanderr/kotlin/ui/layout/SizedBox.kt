@@ -2,8 +2,8 @@ package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.AbstractNode
 import com.github.ashlanderr.kotlin.ui.core.Constraint
-import com.github.ashlanderr.kotlin.ui.core.Node
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 
 class SizedBox(
     var width: Double,
@@ -16,18 +16,9 @@ class SizedBox(
         renderHeight = height
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
+    override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
     }
 
     override fun render(g: Graphics2D) {}
-
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
-    }
 }

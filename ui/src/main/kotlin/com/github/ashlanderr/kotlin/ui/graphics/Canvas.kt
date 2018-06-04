@@ -2,12 +2,10 @@ package com.github.ashlanderr.kotlin.ui.graphics
 
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 
 abstract class Canvas(key: Any? = null) : Node {
-    final override var renderLeft: Double = 0.0
-        private set
-
-    final override var renderTop: Double = 0.0
+    final override var renderTransform = AffineTransform()
         private set
 
     final override var renderWidth: Double = 0.0
@@ -27,19 +25,14 @@ abstract class Canvas(key: Any? = null) : Node {
         renderHeight = h.compute(0.0, h.size)
     }
 
-    final override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
+    final override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
     }
 
-    final override fun render(g: Graphics2D) {
-        val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
-
-        g.translate(renderLeft.toInt(), renderTop.toInt())
-        render(g, renderWidth, renderHeight)
-        g.translate(-renderLeft.toInt(), -renderTop.toInt())
-
-        g.popClip(clip)
+    final override fun render(g: Graphics2D) = renderChildren(g) {
+        clip(g) {
+            render(g, renderWidth, renderHeight)
+        }
     }
 
     final override fun mount(parent: Node?) {
@@ -50,7 +43,8 @@ abstract class Canvas(key: Any? = null) : Node {
         this.parent = null
     }
 
-    final override fun childAtPoint(point: Point): Node? = null
+    final override fun children() = emptyList<Node>()
+    final override fun parentToLocal(point: Point) = point
 
     abstract fun render(g: Graphics2D, w: Double, h: Double)
 }

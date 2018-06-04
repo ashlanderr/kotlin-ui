@@ -2,6 +2,7 @@ package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 import kotlin.math.max
 
 class Stack(
@@ -35,28 +36,19 @@ class Stack(
         }
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
+    override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
 
         for (child in children) {
-            child.arrange(left, top)
+            child.arrange(AffineTransform())
         }
     }
 
-    override fun render(g: Graphics2D) {
+    override fun render(g: Graphics2D) = renderChildren(g) {
         for (child in children) {
             child.render(g)
         }
     }
 
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
-    }
-
-    override fun childAtPoint(point: Point) = children.childAtPoint(point)
+    override fun children() = children
 }

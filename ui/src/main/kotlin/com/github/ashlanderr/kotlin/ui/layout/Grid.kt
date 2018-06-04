@@ -2,6 +2,7 @@ package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 import kotlin.math.max
 
 sealed class Element {
@@ -85,30 +86,27 @@ class Cell(
         child.measure(g, cw, ch)
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = grid.columns[column].offset + left
-        renderTop = grid.rows[row].offset + top
+    override fun arrange(transform: AffineTransform) {
+        val left = grid.columns[column].offset
+        val top = grid.rows[row].offset
+        renderTransform = AffineTransform().apply {
+            translate(left, top)
+        }
 
         val cl = horizontalAlign.computeLeft(child.renderWidth, renderWidth)
         val ct = verticalAlign.computeTop(child.renderHeight, renderHeight)
-        child.arrange(renderLeft + cl, renderTop + ct)
+        child.arrange(AffineTransform().apply {
+            translate(cl, ct)
+        })
     }
 
-    override fun render(g: Graphics2D) {
-        val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
-        child.render(g)
-        g.popClip(clip)
+    override fun render(g: Graphics2D) = renderChildren(g) {
+        clip(g) {
+            child.render(g)
+        }
     }
 
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
-    }
-
-    override fun childAtPoint(point: Point) = child.takeIf { it.containsPoint(point) }
+    override fun children() = listOf(child)
 }
 
 class Grid(
@@ -137,28 +135,17 @@ class Grid(
         renderHeight = rows.sumSize(verticalSpacing)
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
+    override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
 
         arrangeElements(horizontalSpacing, columns)
         arrangeElements(verticalSpacing, rows)
-        children.forEach { it.arrange(left, top) }
+        children.forEach { it.arrange(AffineTransform()) }
     }
 
-    override fun render(g: Graphics2D) {
+    override fun render(g: Graphics2D) = renderChildren(g) {
         for (child in children) child.render(g)
     }
-
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
-    }
-
-    override fun childAtPoint(point: Point) = children.childAtPoint(point)
 
     private fun arrangeElements(spacing: Double, elements: List<Element>) {
         var offset = 0.0
@@ -174,6 +161,8 @@ class Grid(
         val totalWeight = elements.sumWeight()
         elements.forEach { it.flex(it.weight / totalWeight * available) }
     }
+
+    override fun children() = children
 }
 
 private fun List<Element>.sumSize(spacing: Double, fromIndex: Int = 0, count: Int = this.size) = this

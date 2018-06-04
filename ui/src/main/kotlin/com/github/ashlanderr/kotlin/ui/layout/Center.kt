@@ -2,6 +2,7 @@ package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 
 class Center(
     @RxNode var child: Node,
@@ -14,30 +15,21 @@ class Center(
         renderHeight = h.compute(child.renderHeight, h.size)
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
+    override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
 
-        val childLeft = left + (renderWidth - child.renderWidth) / 2
-        val childTop = top + (renderHeight - child.renderHeight) / 2
-        child.arrange(childLeft, childTop)
+        val childLeft = (renderWidth - child.renderWidth) / 2
+        val childTop = (renderHeight - child.renderHeight) / 2
+        child.arrange(AffineTransform().apply {
+            translate(childLeft, childTop)
+        })
     }
 
-    override fun render(g: Graphics2D) {
-        val clip = g.pushClip(renderLeft.toInt(), renderTop.toInt(), renderWidth.toInt(), renderHeight.toInt())
-
-        child.render(g)
-
-        g.popClip(clip)
+    override fun render(g: Graphics2D) = renderChildren(g) {
+        clip(g) {
+            child.render(g)
+        }
     }
 
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
-    }
-
-    override fun childAtPoint(point: Point) = child.takeIf { child.containsPoint(point) }
+    override fun children() = listOf(child)
 }

@@ -2,6 +2,7 @@ package com.github.ashlanderr.kotlin.ui.layout
 
 import com.github.ashlanderr.kotlin.ui.core.*
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 import kotlin.math.max
 import kotlin.math.min
 
@@ -22,23 +23,14 @@ class ConstrainedBox(
         renderHeight = child.renderHeight
     }
 
-    override fun arrange(left: Double, top: Double) {
-        renderLeft = left
-        renderTop = top
-        child.arrange(left, top)
+    override fun arrange(transform: AffineTransform) {
+        renderTransform = transform
+        child.arrange(AffineTransform())
     }
 
-    override fun render(g: Graphics2D) {
+    override fun render(g: Graphics2D) = renderChildren(g) {
         child.render(g)
     }
 
-    override fun mount(parent: Node?) {
-        this.parent = parent
-    }
-
-    override fun unmount() {
-        this.parent = null
-    }
-
-    override fun childAtPoint(point: Point) = child.takeIf { child.containsPoint(point) }
+    override fun children() = listOf(child)
 }
